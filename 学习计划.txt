@@ -1,0 +1,26 @@
+日期：3月24日至4月10日，为期3周，每周2次
+
+时间：暂定周一和周四3:00pm至4:30am，不定期时间练习和答疑
+
+内容：
+1. CUDA基础知识回顾，PPT《CUDA Intro~》结合CUDA例题4个
+（1.1-deviceQuery、1.2-vectorAdd、1.3-template、1.4-cppIntegration）；
+
+2. CUDA编程代码移植，结合CUDA例题2个
+（2.1-matrixMul-unBlock、2.2-clock）
+
+3. CUDA硬件特性优化，PPT《CUDA Perf~》结合CUDA例题4个
+（3.1-matrixMul-Block、3.2-matrixMul-Block+Shared、3.3-matrixMulCUBLAS、3.4-batchCUBLAS）
+
+4. CUDA综合应用之矩阵转置，结合CUDA例题2个
+（4.1-transpose、4.2-matrixNInverse）；
+
+5. CUDA综合应用之并行规约，结合CUDA例题1个
+（5.1-reduction）
+
+6. CUDA综合应用之坐标变换，结合CUDA例题1个
+（6.1-vector3Transform）
+
+练习：
+1-vectorAdd-cppIntegration、2-matrix4Inverse-port、3-matrix4Inverse-opti、4-matrixDet、5-variance、6-vector2Transform
+
