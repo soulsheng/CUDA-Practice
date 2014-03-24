@@ -84,7 +84,7 @@ runTest(int argc, char **argv)
     printf("%s Starting...\n\n", argv[0]);
 
     // use command-line specified CUDA device, otherwise use device with highest Gflops/s
-    int devID = findCudaDevice(argc, (const char **)argv);
+    cudaSetDevice(0);//int devID = findCudaDevice(argc, (const char **)argv);
 
     StopWatchInterface *timer = 0;
     sdkCreateTimer(&timer);
