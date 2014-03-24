@@ -1,0 +1,13 @@
+/1Intro/*.opensdf
+/1Intro/*.sdf
+/1Intro/cppIntegration/Win32
+/1Intro/cppIntegration/*.o
+/1Intro/cppIntegration/*.pdb
+/1Intro/deviceQuery/Win32
+/1Intro/template/Win32
+/1Intro/template/*.o
+/1Intro/template/*.pdb
+/1Intro/vectorAdd/Win32
+/1Intro/vectorAdd/*.o
+/1Intro/vectorAdd/*.pdb
+/bin
