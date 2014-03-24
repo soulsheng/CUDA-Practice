@@ -1,0 +1,14 @@
+一、安装
+1、为什么提示“驱动无法安装”？
+答：台式机和笔记本安装包不能通用，互相混用时会出现这个提示，请安装对应版本的安装包。
+
+二、编译
+1、为什么提示找不到“cuda.h”？
+答：CUDA Toolkit路径设置问题，在属性中“C/C++”-“附加包含目录”添加CUDA的头文件路径“$(CudaToolkitIncludeDir)”。
+
+2、为什么提示找不到“cuda_helper.h”？
+答：CUDA Sample路径设置问题，在属性中“C/C++”-“附加包含目录”添加CUDA的Sample头文件路径“$(NVCUDASAMPLES_ROOT)\common\inc”。
+
+三、运行
+1、为什么提示缺少dll？
+答：从CUDA Toolkit路径将缺少的dll拷到exe所在目录。
