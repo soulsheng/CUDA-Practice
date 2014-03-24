@@ -221,9 +221,6 @@
     </CudaCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="cppIntegration.h" />
-  </ItemGroup>
-  <ItemGroup>
     <ClCompile Include="cppIntegration_gold.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
