@@ -25,38 +25,6 @@
 int *pArgc = NULL;
 char **pArgv = NULL;
 
-// This function wraps the CUDA Driver API into a template function
-template <class T>
-inline void getCudaAttribute(T *attribute, CUdevice_attribute device_attribute, int device)
-{
-    CUresult error =    cuDeviceGetAttribute(attribute, device_attribute, device);
-
-    if (CUDA_SUCCESS != error)
-    {
-        fprintf(stderr, "cuSafeCallNoSync() Driver API error = %04d from file <%s>, line %i.\n",
-                error, __FILE__, __LINE__);
-        exit(EXIT_FAILURE);
-    }
-}
-
-
-inline bool IsGPUCapableP2P(cudaDeviceProp *pProp)
-{
-#ifdef _WIN32
-    return (bool)(pProp->tccDriver ? true : false);
-#else
-    return (bool)(pProp->major >= 2);
-#endif
-}
-
-inline bool IsAppBuiltAs64()
-{
-#if defined(__x86_64) || defined(AMD64) || defined(_M_AMD64)
-    return 1;
-#else
-    return 0;
-#endif
-}
 
 ////////////////////////////////////////////////////////////////////////////////
 // Program main
@@ -118,7 +86,7 @@ main(int argc, char **argv)
         printf("  GPU Clock rate:                                %.0f MHz (%0.2f GHz)\n", deviceProp.clockRate * 1e-3f, deviceProp.clockRate * 1e-6f);
 
 
-#if CUDART_VERSION >= 5000
+
         // This is supported in CUDA 5.0 (runtime API device properties)
         printf("  Memory Clock rate:                             %.0f Mhz\n", deviceProp.memoryClockRate * 1e-3f);
         printf("  Memory Bus Width:                              %d-bit\n",   deviceProp.memoryBusWidth);
@@ -127,22 +95,6 @@ main(int argc, char **argv)
         {
             printf("  L2 Cache Size:                                 %d bytes\n", deviceProp.l2CacheSize);
         }
-#else
-        // This only available in CUDA 4.0-4.2 (but these were only exposed in the CUDA Driver API)
-        int memoryClock;
-        getCudaAttribute<int>(&memoryClock, CU_DEVICE_ATTRIBUTE_MEMORY_CLOCK_RATE, dev);
-        printf("  Memory Clock rate:                             %.0f Mhz\n", memoryClock * 1e-3f);
-        int memBusWidth;
-        getCudaAttribute<int>(&memBusWidth, CU_DEVICE_ATTRIBUTE_GLOBAL_MEMORY_BUS_WIDTH, dev);
-        printf("  Memory Bus Width:                              %d-bit\n", memBusWidth);
-        int L2CacheSize;
-        getCudaAttribute<int>(&L2CacheSize, CU_DEVICE_ATTRIBUTE_L2_CACHE_SIZE, dev);
-
-        if (L2CacheSize)
-        {
-            printf("  L2 Cache Size:                                 %d bytes\n", L2CacheSize);
-        }
-#endif
 
         printf("  Maximum Texture Dimension Size (x,y,z)         1D=(%d), 2D=(%d, %d), 3D=(%d, %d, %d)\n",
                deviceProp.maxTexture1D   , deviceProp.maxTexture2D[0], deviceProp.maxTexture2D[1],
@@ -194,58 +146,6 @@ main(int argc, char **argv)
         printf("     < %s >\n", sComputeMode[deviceProp.computeMode]);
     }
 
-    // If there are 2 or more GPUs, query to determine whether RDMA is supported
-    if (deviceCount >= 2)
-    {
-        cudaDeviceProp prop[64];
-        int gpuid[64]; // we want to find the first two GPU's that can support P2P
-        int gpu_p2p_count = 0;
-
-        for (int i=0; i < deviceCount; i++)
-        {
-            checkCudaErrors(cudaGetDeviceProperties(&prop[i], i));
-
-            // Only boards based on Fermi or later can support P2P
-            if ((prop[i].major >= 2)
-#ifdef _WIN32
-                // on Windows (64-bit), the Tesla Compute Cluster driver for windows must be enabled to supprot this
-                && prop[i].tccDriver
-#endif
-               )
-            {
-                // This is an array of P2P capable GPUs
-                gpuid[gpu_p2p_count++] = i;
-            }
-        }
-
-        // Show all the combinations of support P2P GPUs
-        int can_access_peer_0_1, can_access_peer_1_0;
-
-        if (gpu_p2p_count >= 2)
-        {
-            for (int i = 0; i < gpu_p2p_count-1; i++)
-            {
-                for (int j = 1; j < gpu_p2p_count; j++)
-                {
-                    checkCudaErrors(cudaDeviceCanAccessPeer(&can_access_peer_0_1, gpuid[i], gpuid[j]));
-                    printf("> Peer access from %s (GPU%d) -> %s (GPU%d) : %s\n", prop[gpuid[i]].name, gpuid[i],
-                           prop[gpuid[j]].name, gpuid[j] ,
-                           can_access_peer_0_1 ? "Yes" : "No");
-                }
-            }
-
-            for (int j = 1; j < gpu_p2p_count; j++)
-            {
-                for (int i = 0; i < gpu_p2p_count-1; i++)
-                {
-                    checkCudaErrors(cudaDeviceCanAccessPeer(&can_access_peer_1_0, gpuid[j], gpuid[i]));
-                    printf("> Peer access from %s (GPU%d) -> %s (GPU%d) : %s\n", prop[gpuid[j]].name, gpuid[j],
-                           prop[gpuid[i]].name, gpuid[i] ,
-                           can_access_peer_1_0 ? "Yes" : "No");
-                }
-            }
-        }
-    }
 
     // csv masterlog info
     // *****************************
