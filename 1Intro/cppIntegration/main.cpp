@@ -10,9 +10,9 @@
  */
 
 /* Example of integrating CUDA functions into an existing
- * application / framework.
+ * application / framework. 将CUDA函数集成到现有的C++程序，实现CPP文件对CU文件的调用。
  * CPP code representing the existing application / framework.
- * Compiled with default CPP compiler.
+ * Compiled with default CPP compiler. CUDA实现对凯撒加密的破解功能，明文字符串"Hello World"每个字符后移10个位置进行加密，前移10位实现解密。
  */
 
 // includes, system
