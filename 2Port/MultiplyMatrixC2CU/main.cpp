@@ -50,7 +50,7 @@ int main()
 
 	float timeValueC, timeValueG;
 	timerC.start();
-	multiplymatrixCPU2( aMatrix, bMatrix, cMatrix, nMatrix );
+	multiplymatrixCPU3( aMatrix, bMatrix, cMatrix, nMatrix );
 	timerC.stop();
 	timeValueC = timerC.getTime();
 	cout<< "time is "<< timeValueC << " ms" << endl ;

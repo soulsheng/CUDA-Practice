@@ -35,18 +35,27 @@ int multiplymatrixCPU3( float* a, float* b, float* c, int n )
 	{
 		for (int j=0;j<n/2;j++)
 		{
+			int cOffset = 2*n*i + 2*j;
 			for (int k=0;k<n/2;k++)
 			{
-				int aOffset = (i*n/2 + k)*4;
-				int bOffset = (k*n/2 + j)*4;
-				int cOffset = (i*n/2 + j)*4;
+				int aOffset = 2*n*i + 2*k;
+				int bOffset = 2*n*k + 2*j;
+				
+				float cBlockOne[2][2];
+				for(int l=0;l<2;l++)
+					for(int m=0;m<2;m++)
+						cBlockOne[l][m] = 0.0f;
 
 				for(int l=0;l<2;l++)
 					for(int m=0;m<2;m++)
 						for (int p=0;p<2;p++)
 						{
-							c[cOffset+l*2+m] += a[aOffset+l*2+p] * b[bOffset+p*2+m];
+							cBlockOne[l][m] += a[aOffset+l*n+p] * b[bOffset+p*n+m];
 						}
+
+				for(int l=0;l<2;l++)
+					for(int m=0;m<2;m++)
+						c[cOffset + l*n +m ] += cBlockOne[l][m];
 			}
 		}
 	}
