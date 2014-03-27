@@ -5,8 +5,8 @@ using namespace std;
 #include "utilityTimer.h"
 #include "multiplymatrixCPU.h"
 
-#define NMATRIX	4
-#define PRINT	1
+#define NMATRIX	1024
+#define PRINT	0
 
 
 extern "C"	
@@ -50,7 +50,7 @@ int main()
 
 	float timeValueC, timeValueG;
 	timerC.start();
-	multiplymatrixCPU3( aMatrix, bMatrix, cMatrix, nMatrix );
+	multiplymatrixCPU4( aMatrix, bMatrix, cMatrix, nMatrix );
 	timerC.stop();
 	timeValueC = timerC.getTime();
 	cout<< "time is "<< timeValueC << " ms" << endl ;

@@ -62,3 +62,38 @@ int multiplymatrixCPU3( float* a, float* b, float* c, int n )
 
 	return 0;
 }
+
+#define nTile 16
+int multiplymatrixCPU4( float* a, float* b, float* c, int n )
+{
+	for (int i=0;i<n/nTile;i++)
+	{
+		for (int j=0;j<n/nTile;j++)
+		{
+			int cOffset = nTile*n*i + nTile*j;
+			for (int k=0;k<n/nTile;k++)
+			{
+				int aOffset = nTile*n*i + nTile*k;
+				int bOffset = nTile*n*k + nTile*j;
+
+				float cBlockOne[nTile][nTile];
+				for(int l=0;l<nTile;l++)
+					for(int m=0;m<nTile;m++)
+						cBlockOne[l][m] = 0.0f;
+
+				for(int l=0;l<nTile;l++)
+					for(int m=0;m<nTile;m++)
+						for (int p=0;p<nTile;p++)
+						{
+							cBlockOne[l][m] += a[aOffset+l*n+p] * b[bOffset+p*n+m];
+						}
+
+						for(int l=0;l<nTile;l++)
+							for(int m=0;m<nTile;m++)
+								c[cOffset + l*n +m ] += cBlockOne[l][m];
+			}
+		}
+	}
+
+	return 0;
+}
