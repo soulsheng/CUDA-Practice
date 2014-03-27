@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MultiplyMatrixC", "MultiplyMatrixC\MultiplyMatrixC.vcxproj", "{4239C83D-2A0F-45BE-9960-3F49A4DF93A9}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MultiplyMatrixC2CU", "MultiplyMatrixC2CU\MultiplyMatrixC.vcxproj", "{4239C83D-2A0F-45BE-9960-3F49A4DF93A9}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "matrixMul", "matrixMul\matrixMul_vs2010.vcxproj", "{C986E2A6-ABF8-4ABC-B292-63744CC03DFB}"
 EndProject
