@@ -43,10 +43,10 @@ int  multiplymatrixGPU( float* a, float* b, float* c, int n )
 
 	int sizeBlock = 256;
 	//int sizeGrid = (n*n+sizeBlock-1)/sizeBlock;
-	//kernel<<< sizeBlock, sizeGrid >>>(aDev, bDev, cDev, n);
+	//kernel<<< sizeGrid, sizeBlock >>>(aDev, bDev, cDev, n);
 
 	int sizeGrid2 = (n+sizeBlock-1)/sizeBlock;
-	kernel2<<< sizeBlock, sizeGrid2 >>>(aDev, bDev, cDev, n);
+	kernel2<<< sizeGrid2, sizeBlock  >>>(aDev, bDev, cDev, n);
 
 	cudaMemcpy( c, cDev, n*n*sizeof(float), cudaMemcpyDeviceToHost );
 
