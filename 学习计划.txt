@@ -28,7 +28,7 @@
 1.3-vectorAdd-cppIntegration，将vectorAdd例子封装成cppIntegration样子，C++对比调用C++和CUDA。
 
 2. CUDA编程代码移植
-2-matrix4Inverse-port、
+2.1-matrixMulCPU-unBlock、2.2-matrixMulGPU-unBlock、2.3-matrixMulCPU-block
 
 3-matrix4Inverse-opti、
 4-matrixDet、

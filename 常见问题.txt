@@ -15,3 +15,8 @@
 三、运行
 1、为什么提示缺少dll？
 答：从CUDA Toolkit路径将缺少的dll拷到exe所在目录。
+
+四、调试
+1、如何确认某条语句是否执行正确？
+答：方法一：cudaError_t err = cudaMalloc();  if (err != cudaSuccess)  { printf("%s","error");}
+方法二：cudaError_t err = cudaGetLastError();  if (err != cudaSuccess)  { printf("%s",cudaGetErrorString(err) ); }
