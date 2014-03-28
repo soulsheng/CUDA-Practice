@@ -29,6 +29,7 @@
 
 2. CUDA编程代码移植
 2.1-matrixMulCPU-unBlock、2.2-matrixMulGPU-unBlock、2.3-matrixMulCPU-block
+3部分，矩阵相乘C++版本、CUDA版本、C++分块版本。得出各人机器上，后2个版本相对第1个版本提升的速度。
 
 3-matrix4Inverse-opti、
 4-matrixDet、
