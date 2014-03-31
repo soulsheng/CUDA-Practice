@@ -88,7 +88,11 @@
     <ClCompile Include="timerCPP.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="referCPP.h" />
     <ClInclude Include="timerCPP.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="matrixmulGPU.cuh" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

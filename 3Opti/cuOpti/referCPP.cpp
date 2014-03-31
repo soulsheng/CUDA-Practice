@@ -1,5 +1,7 @@
 
-extern "C"  void matrixMul( float* a, float*b, float*c, int n )
+#include "referCPP.h"
+
+void matrixMul( float* a, float*b, float*c, int n )
 {
 	for(int i=0; i<n; i++)
 		for(int j=0;j<n;j++)
@@ -7,7 +9,7 @@ extern "C"  void matrixMul( float* a, float*b, float*c, int n )
 				c[ i*n +j] += a[ i*n + k] * b[ k*n +j] ;
 }
 
-extern "C"  void matrixMul2( float* a, float*b, float*c, int n )
+void matrixMul2( float* a, float*b, float*c, int n )
 {
 	for(int ii=0; ii<n*n; ii++)
 	{
@@ -20,7 +22,7 @@ extern "C"  void matrixMul2( float* a, float*b, float*c, int n )
 }
 
 #define  TILE 16
-extern "C"  void matrixMul3( float* a, float*b, float*c, int n )
+void matrixMul3( float* a, float*b, float*c, int n )
 {
 
 	for(int i=0; i<n/TILE; i++)

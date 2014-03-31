@@ -4,6 +4,8 @@
 #include <iostream>
 using namespace std;
 
+#include "matrixmulGPU.cuh"
+
 __global__ void kernelMatrixMul( float* a, float*b, float*c, int n )
 {
 	int ii = blockIdx.x * blockDim.x + threadIdx.x;
@@ -18,7 +20,7 @@ __global__ void kernelMatrixMul( float* a, float*b, float*c, int n )
 		c[ i*n +j] += a[ i*n + k] * b[ k*n +j] ;
 }
 
-extern "C" void matrixMulGPU( float* a, float*b, float*c, int n )
+void matrixMulGPU( float* a, float*b, float*c, int n )
 {
 	float *aDev,*bDev,*cDev;
 	cudaMalloc( (void**)&aDev, n*n*sizeof(float) );

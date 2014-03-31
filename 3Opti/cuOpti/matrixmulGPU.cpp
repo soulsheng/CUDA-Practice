@@ -3,12 +3,8 @@ using namespace std;
 #include "stdio.h"
 
 #include "timerCPP.h"
-
-extern "C" void matrixMul( float* a, float*b, float*c, int n );
-extern "C" void matrixMul2( float* a, float*b, float*c, int n );
-extern "C" void matrixMul3( float* a, float*b, float*c, int n );
-
-extern "C" void matrixMulGPU( float* a, float*b, float*c, int n );
+#include "referCPP.h"
+#include "matrixmulGPU.cuh"
 
 void printMatrix( float* m, int n )
 {
