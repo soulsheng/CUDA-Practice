@@ -24,7 +24,7 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{C986E2A6-ABF8-4ABC-B292-63744CC03DFB}</ProjectGuid>
     <RootNamespace>matrixMul_vs2010</RootNamespace>
-    <ProjectName>matrixMul</ProjectName>
+    <ProjectName>matrixMul-sdk</ProjectName>
     <CudaToolkitCustomDir />
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
