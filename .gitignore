@@ -25,3 +25,5 @@
 /3Opti/cuOpti/Debug
 /3Opti/cuOpti/Release
 /3Opti/cuOpti/*.pdb
+/3Opti/matrixMul-SDK/Win32
+/3Opti/matrixMul-SDK/*.pdb
