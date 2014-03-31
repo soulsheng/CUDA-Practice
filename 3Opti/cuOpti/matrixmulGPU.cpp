@@ -70,7 +70,7 @@ int main()
 	// GPU °æ±¾1
 	cout << "\n" << "GPU °æ±¾1" << endl;
 	memset( cMatrix, 0, nSize*nSize*sizeof(float) );
-	matrixMulGPU( aMatrix, bMatrix, cMatrix, nSize );
+	matrixMulGPU1( aMatrix, bMatrix, cMatrix, nSize );
 	printMatrix( cMatrix, nSize );
 	timerGPU.stop();
 	cout << timerGPU.getTime() << endl;

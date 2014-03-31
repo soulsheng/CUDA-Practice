@@ -20,7 +20,7 @@ __global__ void kernelMatrixMul( float* a, float*b, float*c, int n )
 		c[ i*n +j] += a[ i*n + k] * b[ k*n +j] ;
 }
 
-void matrixMulGPU( float* a, float*b, float*c, int n )
+void matrixMulGPU1( float* a, float*b, float*c, int n )
 {
 	float *aDev,*bDev,*cDev;
 	cudaMalloc( (void**)&aDev, n*n*sizeof(float) );
