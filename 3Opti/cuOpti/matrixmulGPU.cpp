@@ -66,6 +66,9 @@ int main()
 	printMatrix( cMatrix, nSize );
 	timerCPU.stop();
 	cout << timerCPU.getTime() << endl;
+
+	setupCUDA();
+
 #if 1
 	timerGPU.start();
 	// GPU 版本2，一维索引
@@ -101,7 +104,7 @@ int main()
 
 #if 1
 	timerGPU.start();
-	// GPU 版本4，block 优化
+	// GPU 版本4，block 分块
 	cout << "\n" << "GPU 版本4，block优化" << endl;
 	memset( cMatrix, 0, nSize*nSize*sizeof(float) );
 	matrixMulGPU4( aMatrix, bMatrix, cMatrix, nSize );
@@ -109,4 +112,17 @@ int main()
 	timerGPU.stop();
 	cout << timerGPU.getTime() << endl;
 #endif
+
+
+#if 1
+	timerGPU.start();
+	// GPU 版本5，block 分块，步长
+	cout << "\n" << "GPU 版本5，block 分块，步长" << endl;
+	memset( cMatrix, 0, nSize*nSize*sizeof(float) );
+	matrixMulGPU5( aMatrix, bMatrix, cMatrix, nSize );
+	printMatrix( cMatrix, nSize );
+	timerGPU.stop();
+	cout << timerGPU.getTime() << endl;
+#endif
+
 }
