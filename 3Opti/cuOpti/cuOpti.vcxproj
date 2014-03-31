@@ -86,10 +86,12 @@
     <ClCompile Include="matrixmulGPU.cpp" />
     <ClCompile Include="referCPP.cpp" />
     <ClCompile Include="timerCPP.cpp" />
+    <ClCompile Include="timerCUDA.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="referCPP.h" />
     <ClInclude Include="timerCPP.h" />
+    <ClInclude Include="timerCUDA.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="matrixmulGPU.cuh" />

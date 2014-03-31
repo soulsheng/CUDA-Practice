@@ -5,6 +5,7 @@ using namespace std;
 #include "timerCPP.h"
 #include "referCPP.h"
 #include "matrixmulGPU.cuh"
+#include "timerCUDA.h"
 
 void printMatrix( float* m, int n )
 {
@@ -22,7 +23,7 @@ void printMatrix( float* m, int n )
 int main()
 {
 	timerC  timerCPU;
-	timerC  timerGPU;
+	timerC	timerGPU;
 
 	int nSize = 512;
 	float *aMatrix , *bMatrix, *cMatrix;
