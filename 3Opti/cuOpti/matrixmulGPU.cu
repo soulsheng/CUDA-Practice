@@ -5,6 +5,7 @@
 using namespace std;
 
 #include "matrixmulGPU.cuh"
+#include "timerCUDA.h"
 
 #define  TILE 16
 
@@ -183,12 +184,18 @@ void matrixMulGPU2( float* a, float*b, float*c, int n )
 
 	int nBlock = 256;
 	int nGrid = (n*n + nBlock-1)/nBlock;
+	
+	timerCUDA	timerGPU;
+	timerGPU.start();
 
 	kernelMatrixMul2<<< nGrid, nBlock >>>( aDev, bDev, cDev, n );
 	cudaError_t err = cudaGetLastError();
 
 	if( err != cudaSuccess )
 		cout << "error" << endl;
+	
+	timerGPU.stop();
+	cout << "Kernel time : " << timerGPU.getTime() << endl;
 
 	cudaMemcpy( c, cDev, n*n*sizeof(float), cudaMemcpyDeviceToHost );
 
@@ -213,12 +220,18 @@ void matrixMulGPU1( float* a, float*b, float*c, int n )
 	int nGrid = (n + nBlock-1)/nBlock;
 	dim3 sizeBlock(nBlock, nBlock);
 	dim3 sizeGrid( nGrid, nGrid );
+	
+	timerCUDA	timerGPU;
+	timerGPU.start();
 
 	kernelMatrixMul1<<< sizeGrid,sizeBlock >>>( aDev, bDev, cDev, n );
 	cudaError_t err = cudaGetLastError();
 
 	if( err != cudaSuccess )
 		cout << "error" << endl;
+	
+	timerGPU.stop();
+	cout << "Kernel time : " << timerGPU.getTime() << endl;
 
 	cudaMemcpy( c, cDev, n*n*sizeof(float), cudaMemcpyDeviceToHost );
 
@@ -243,11 +256,17 @@ void matrixMulGPU3( float* a, float*b, float*c, int n )
 	dim3 sizeBlock(nBlock, nBlock);
 	dim3 sizeGrid( nGrid, nGrid );
 
+	timerCUDA	timerGPU;
+	timerGPU.start();
+
 	kernelMatrixMul3<<< sizeGrid,sizeBlock >>>( aDev, bDev, cDev, n );
 	cudaError_t err = cudaGetLastError();
 
 	if( err != cudaSuccess )
 		cout << "error" << endl;
+	
+	timerGPU.stop();
+	cout << "Kernel time : " << timerGPU.getTime() << endl;
 
 	cudaMemcpy( c, cDev, n*n*sizeof(float), cudaMemcpyDeviceToHost );
 
@@ -273,11 +292,17 @@ void matrixMulGPU4( float* a, float*b, float*c, int n )
 	dim3 sizeBlock(nBlock, nBlock);
 	dim3 sizeGrid( nGrid, nGrid );
 
+	timerCUDA	timerGPU;
+	timerGPU.start();
+
 	kernelMatrixMul4<<< sizeGrid,sizeBlock >>>( aDev, bDev, cDev, n );
 	cudaError_t err = cudaGetLastError();
 
 	if( err != cudaSuccess )
 		cout << "error" << endl;
+
+	timerGPU.stop();
+	cout << "Kernel time : " << timerGPU.getTime() << endl;
 
 	cudaMemcpy( c, cDev, n*n*sizeof(float), cudaMemcpyDeviceToHost );
 
@@ -302,11 +327,17 @@ void matrixMulGPU5( float* a, float*b, float*c, int n )
 	dim3 sizeBlock(nBlock, nBlock);
 	dim3 sizeGrid( nGrid, nGrid );
 
+	timerCUDA	timerGPU;
+	timerGPU.start();
+
 	kernelMatrixMul5<<< sizeGrid,sizeBlock >>>( aDev, bDev, cDev, n );
 	cudaError_t err = cudaGetLastError();
 
 	if( err != cudaSuccess )
 		cout << "error" << endl;
+
+	timerGPU.stop();
+	cout << "Kernel time : " << timerGPU.getTime() << endl;
 
 	cudaMemcpy( c, cDev, n*n*sizeof(float), cudaMemcpyDeviceToHost );
 

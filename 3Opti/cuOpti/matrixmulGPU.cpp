@@ -23,7 +23,6 @@ void printMatrix( float* m, int n )
 int main()
 {
 	timerC  timerCPU;
-	timerCUDA	timerGPU;
 
 	int nSize = 512;
 	float *aMatrix , *bMatrix, *cMatrix;
@@ -67,62 +66,67 @@ int main()
 	timerCPU.stop();
 	cout << timerCPU.getTime() << endl;
 
+	// 预热
+	cout << "\n预热" << endl;
 	setupCUDA();
+	memset( cMatrix, 0, nSize*nSize*sizeof(float) );
+	matrixMulGPU1( aMatrix, bMatrix, cMatrix, nSize );
 
 #if 1
-	timerGPU.start();
+	timerCPU.start();
 	// GPU 版本2，一维索引
 	cout << "\n" << "GPU 版本2，一维索引" << endl;
 	memset( cMatrix, 0, nSize*nSize*sizeof(float) );
 	matrixMulGPU2( aMatrix, bMatrix, cMatrix, nSize );
 	printMatrix( cMatrix, nSize );
-	timerGPU.stop();
-	cout << timerGPU.getTime() << endl;
+	timerCPU.stop();
+	cout << "CPU time : " << timerCPU.getTime() << endl;	
 #endif
+
 #if 1
-	timerGPU.start();
+	timerCPU.start();
 	// GPU 版本1，一维索引
 	cout << "\n" << "GPU 版本1，二维索引" << endl;
 	memset( cMatrix, 0, nSize*nSize*sizeof(float) );
 	matrixMulGPU1( aMatrix, bMatrix, cMatrix, nSize );
 	printMatrix( cMatrix, nSize );
-	timerGPU.stop();
-	cout << timerGPU.getTime() << endl;
+	timerCPU.stop();
+	cout << "CPU time : " << timerCPU.getTime() << endl;
 #endif
 
 #if 1
-	timerGPU.start();
+	timerCPU.start();
 	// GPU 版本3，block 初步
 	cout << "\n" << "GPU 版本3，block初步" << endl;
 	memset( cMatrix, 0, nSize*nSize*sizeof(float) );
 	matrixMulGPU3( aMatrix, bMatrix, cMatrix, nSize );
 	printMatrix( cMatrix, nSize );
-	timerGPU.stop();
-	cout << timerGPU.getTime() << endl;
+	timerCPU.stop();
+	cout << "CPU time : " << timerCPU.getTime() << endl;
 #endif
 
 
 #if 1
-	timerGPU.start();
+	timerCPU.start();
 	// GPU 版本4，block 分块
 	cout << "\n" << "GPU 版本4，block优化" << endl;
 	memset( cMatrix, 0, nSize*nSize*sizeof(float) );
 	matrixMulGPU4( aMatrix, bMatrix, cMatrix, nSize );
 	printMatrix( cMatrix, nSize );
-	timerGPU.stop();
-	cout << timerGPU.getTime() << endl;
+	timerCPU.stop();
+	cout << "CPU time : " << timerCPU.getTime() << endl;
 #endif
 
 
 #if 1
-	timerGPU.start();
+	timerCPU.start();
 	// GPU 版本5，block 分块，步长
 	cout << "\n" << "GPU 版本5，block 分块，步长" << endl;
 	memset( cMatrix, 0, nSize*nSize*sizeof(float) );
 	matrixMulGPU5( aMatrix, bMatrix, cMatrix, nSize );
 	printMatrix( cMatrix, nSize );
-	timerGPU.stop();
-	cout << timerGPU.getTime() << endl;
+	timerCPU.stop();
+	cout << "CPU time : " << timerCPU.getTime() << endl;
 #endif
 
 }
