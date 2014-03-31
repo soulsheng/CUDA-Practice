@@ -23,7 +23,7 @@ void printMatrix( float* m, int n )
 int main()
 {
 	timerC  timerCPU;
-	timerC	timerGPU;
+	timerCUDA	timerGPU;
 
 	int nSize = 512;
 	float *aMatrix , *bMatrix, *cMatrix;
@@ -86,4 +86,16 @@ int main()
 	timerGPU.stop();
 	cout << timerGPU.getTime() << endl;
 #endif
+
+#if 1
+	timerGPU.start();
+	// GPU 版本1，一维索引
+	cout << "\n" << "GPU 版本3，block分块，二维索引" << endl;
+	memset( cMatrix, 0, nSize*nSize*sizeof(float) );
+	matrixMulGPU3( aMatrix, bMatrix, cMatrix, nSize );
+	printMatrix( cMatrix, nSize );
+	timerGPU.stop();
+	cout << timerGPU.getTime() << endl;
+#endif
+
 }
