@@ -3,10 +3,10 @@
 
 void matrixMul1( float* a, float*b, float*c, int n )
 {
-	for(int i=0; i<n; i++)
-		for(int j=0;j<n;j++)
+	for(int y=0; y<n; y++)
+		for(int x=0;x<n;x++)
 			for(int k=0;k<n;k++)
-				c[ i*n +j] += a[ i*n + k] * b[ k*n +j] ;
+				c[ y*n +x] += a[ y*n + k] * b[ k*n +x] ;
 }
 
 void matrixMul2( float* a, float*b, float*c, int n )

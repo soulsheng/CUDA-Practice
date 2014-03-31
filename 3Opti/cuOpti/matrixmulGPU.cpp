@@ -41,16 +41,16 @@ int main()
 	printMatrix( bMatrix, nSize );
 
 	timerCPU.start();
-	// CPU 版本1
-	cout <<"\n" <<  "CPU 版本1" << endl;
+	// CPU 版本1，二维索引
+	cout <<"\n" <<  "CPU 版本1，二维索引" << endl;
 	matrixMul1( aMatrix, bMatrix, cMatrix, nSize );
 	printMatrix( cMatrix, nSize );
 	timerCPU.stop();
 	cout << timerCPU.getTime() << endl;
 
 	timerCPU.start();
-	// CPU 一重循环
-	cout << "\n" << "CPU 版本2 一重循环" << endl;
+	// CPU 版本2，一维索引
+	cout << "\n" << "CPU 版本2，一维索引" << endl;
 	memset( cMatrix, 0, nSize*nSize*sizeof(float) );
 	matrixMul2( aMatrix, bMatrix, cMatrix, nSize );
 	printMatrix( cMatrix, nSize );
@@ -58,20 +58,31 @@ int main()
 	cout << timerCPU.getTime() << endl;
 
 	timerCPU.start();
-	// CPU block
-	cout << "\n" << "CPU 版本3 block" << endl;
+	// CPU 版本3，block分块，二维索引
+	cout << "\n" << "CPU 版本3，block分块，二维索引" << endl;
 	memset( cMatrix, 0, nSize*nSize*sizeof(float) );
 	matrixMul3( aMatrix, bMatrix, cMatrix, nSize );
 	printMatrix( cMatrix, nSize );
 	timerCPU.stop();
 	cout << timerCPU.getTime() << endl;
-
+#if 1
 	timerGPU.start();
-	// GPU 版本1
-	cout << "\n" << "GPU 版本1" << endl;
+	// GPU 版本2，一维索引
+	cout << "\n" << "GPU 版本2，一维索引" << endl;
+	memset( cMatrix, 0, nSize*nSize*sizeof(float) );
+	matrixMulGPU2( aMatrix, bMatrix, cMatrix, nSize );
+	printMatrix( cMatrix, nSize );
+	timerGPU.stop();
+	cout << timerGPU.getTime() << endl;
+#endif
+#if 1
+	timerGPU.start();
+	// GPU 版本1，一维索引
+	cout << "\n" << "GPU 版本1，二维索引" << endl;
 	memset( cMatrix, 0, nSize*nSize*sizeof(float) );
 	matrixMulGPU1( aMatrix, bMatrix, cMatrix, nSize );
 	printMatrix( cMatrix, nSize );
 	timerGPU.stop();
 	cout << timerGPU.getTime() << endl;
+#endif
 }
