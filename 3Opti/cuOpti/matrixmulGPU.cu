@@ -38,4 +38,9 @@ extern "C" void matrixMulGPU( float* a, float*b, float*c, int n )
 		cout << "error" << endl;
 
 	cudaMemcpy( c, cDev, n*n*sizeof(float), cudaMemcpyDeviceToHost );
+
+	cudaFree( aDev );
+	cudaFree( bDev );
+	cudaFree( cDev );
+
 }

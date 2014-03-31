@@ -1,5 +1,5 @@
 
-#include "timerC.h"
+#include "timerCPP.h"
 
 	timerC::timerC()
 	{

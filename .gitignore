@@ -20,3 +20,8 @@
 /3Opti/*.sdf
 /3Opti/*.suo
 /3Opti/ipch
+/3Opti/Debug
+/3Opti/Release
+/3Opti/cuOpti/Debug
+/3Opti/cuOpti/Release
+/3Opti/cuOpti/*.pdb
