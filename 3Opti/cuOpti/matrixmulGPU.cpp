@@ -24,7 +24,7 @@ int main()
 {
 	timerC  timerCPU;
 
-	int nSize = 512;
+	int nSize = 512; 
 	float *aMatrix , *bMatrix, *cMatrix;
 	aMatrix = (float*)malloc( nSize*nSize*sizeof(float) );
 	bMatrix = (float*)malloc( nSize*nSize*sizeof(float) );
@@ -108,8 +108,8 @@ int main()
 
 #if 1
 	timerCPU.start();
-	// GPU 版本4，block 分块
-	cout << "\n" << "GPU 版本4，block优化" << endl;
+	// GPU 版本4，block SAVE memory
+	cout << "\n" << "GPU 版本4，block SAVE memory" << endl;
 	memset( cMatrix, 0, nSize*nSize*sizeof(float) );
 	matrixMulGPU4( aMatrix, bMatrix, cMatrix, nSize );
 	printMatrix( cMatrix, nSize );
