@@ -15,21 +15,21 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="c2cu.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="matrixmulCPP.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="timerC.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
     <CudaCompile Include="matrixmulGPU.cu" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="timerC.h">
+    <ClCompile Include="matrixmulGPU.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="referCPP.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="timerCPP.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="timerCPP.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
