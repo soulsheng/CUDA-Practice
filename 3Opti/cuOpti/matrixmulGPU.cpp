@@ -43,7 +43,7 @@ int main()
 	timerCPU.start();
 	// CPU °æ±¾1
 	cout <<"\n" <<  "CPU °æ±¾1" << endl;
-	matrixMul( aMatrix, bMatrix, cMatrix, nSize );
+	matrixMul1( aMatrix, bMatrix, cMatrix, nSize );
 	printMatrix( cMatrix, nSize );
 	timerCPU.stop();
 	cout << timerCPU.getTime() << endl;
