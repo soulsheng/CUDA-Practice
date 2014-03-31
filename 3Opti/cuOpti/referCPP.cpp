@@ -25,37 +25,41 @@ void matrixMul2( float* a, float*b, float*c, int n )
 void matrixMul3( float* a, float*b, float*c, int n )
 {
 
-	for(int i=0; i<n/TILE; i++)
-		for(int j=0;j<n/TILE;j++)
-			for(int k=0;k<n/TILE;k++)
+	for(int blockIdy=0; blockIdy<n/TILE; blockIdy++)
+	{
+		for(int blockIdx=0;blockIdx<n/TILE;blockIdx++)
 		{
-			float aBlock[TILE][TILE];
-			float bBlock[TILE][TILE];
-			float cBlockOne[TILE][TILE];
+			for(int k=0;k<n/TILE;k++)
+			{
+				float aBlock[TILE][TILE];
+				float bBlock[TILE][TILE];
+				float cBlockOne[TILE][TILE];
 			
-			// 
-			int aOffset =( i * n/TILE) * (TILE*TILE) + k*TILE  ;
-			int bOffset =( k * n/TILE) * (TILE*TILE) + j*TILE  ;
-			int cOffset =( i * n/TILE) * (TILE*TILE) + j*TILE  ;
+				// 
+				int aOffset =( blockIdy * n/TILE) * (TILE*TILE) + k*TILE  ;
+				int bOffset =( k * n/TILE) * (TILE*TILE) + blockIdx*TILE  ;
+				int cOffset =( blockIdy * n/TILE) * (TILE*TILE) + blockIdx*TILE  ;
 
-			for(int l=0;l<TILE;l++)
-				for(int m=0;m<TILE;m++)
+				for(int threadIdy=0;threadIdy<TILE;threadIdy++)
+					for(int threadIdx=0;threadIdx<TILE;threadIdx++)
+						{
+							aBlock[threadIdy][threadIdx] = a[ aOffset + threadIdy*n + threadIdx ];
+							bBlock[threadIdy][threadIdx] = b[ bOffset + threadIdy*n + threadIdx ];
+							cBlockOne[threadIdy][threadIdx] = 0.0f ;
+						}
+
+
+				for(int threadIdy=0;threadIdy<TILE;threadIdy++)
+					for(int threadIdx=0;threadIdx<TILE;threadIdx++)
+						for(int p=0;p<TILE;p++)
 					{
-						aBlock[l][m] = a[ aOffset + l*n + m ];
-						bBlock[l][m] = b[ bOffset + l*n +m ];
-						cBlockOne[l][m] = 0.0f ;
+						cBlockOne[threadIdy][threadIdx] += aBlock[threadIdy][p] * bBlock[p][threadIdx];
 					}
-
-
-			for(int l=0; l<TILE;l++)
-				for(int m=0;m<TILE;m++)
-					for(int p=0;p<TILE;p++)
-				{
-					cBlockOne[l][m] += aBlock[l][p] * bBlock[p][m];
-				}
 			
-			for(int l=0; l<TILE;l++)
-				for(int m=0;m<TILE;m++)
-					c[ cOffset + l*n + m] += cBlockOne[l][m];
+				for(int threadIdy=0;threadIdy<TILE;threadIdy++)
+					for(int threadIdx=0;threadIdx<TILE;threadIdx++)
+						c[ cOffset + threadIdy*n + threadIdx] += cBlockOne[threadIdy][threadIdx];
+			}
 		}
+	}
 }
