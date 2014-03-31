@@ -89,8 +89,8 @@ int main()
 
 #if 1
 	timerGPU.start();
-	// GPU 版本1，一维索引
-	cout << "\n" << "GPU 版本3，block分块，二维索引" << endl;
+	// GPU 版本3，block 初步
+	cout << "\n" << "GPU 版本3，block初步" << endl;
 	memset( cMatrix, 0, nSize*nSize*sizeof(float) );
 	matrixMulGPU3( aMatrix, bMatrix, cMatrix, nSize );
 	printMatrix( cMatrix, nSize );
@@ -98,4 +98,15 @@ int main()
 	cout << timerGPU.getTime() << endl;
 #endif
 
+
+#if 1
+	timerGPU.start();
+	// GPU 版本4，block 优化
+	cout << "\n" << "GPU 版本4，block优化" << endl;
+	memset( cMatrix, 0, nSize*nSize*sizeof(float) );
+	matrixMulGPU4( aMatrix, bMatrix, cMatrix, nSize );
+	printMatrix( cMatrix, nSize );
+	timerGPU.stop();
+	cout << timerGPU.getTime() << endl;
+#endif
 }
