@@ -6,8 +6,13 @@ using namespace std;
 
 int reduction_cpu( int* array, int size )
 {
+	int result = 0;
+	for (int i=0;i<size;i++)
+	{
+		result += array[i];
+	}
 
-	return 0;
+	return result;
 }
 
 void setArray( int* array, int size )

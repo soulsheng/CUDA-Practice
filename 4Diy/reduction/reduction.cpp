@@ -23,12 +23,12 @@ void main()
 	
 	result = reduction_cpu( a, N );
 
-	cout << "reduction_cpu" <<endl;
+	cout << "reduction_cpu: " << result <<endl;
 	printArray( a, N );
 
 	result = reduction_gpu( a, N );
 
-	cout << "reduction_gpu" <<endl;
+	cout << "reduction_gpu: " << result <<endl;
 	printArray( a, N );
 
 
