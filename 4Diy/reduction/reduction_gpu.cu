@@ -40,11 +40,16 @@ unsigned int reduction_gpu( unsigned int* array, int size )
 
 	cudaMemcpy( d_array, array, sizeof(unsigned int)*size, cudaMemcpyHostToDevice );
 
-	int sizeBlock = size>128?128: size;
+	int sizeBlock = size>256?256: size;
 	int countBlock = (size+ sizeBlock-1)/sizeBlock;
 	reduction_kernel<<< countBlock, sizeBlock >>>( d_array, size );
 
 	cudaMemcpy( array, d_array, sizeof(unsigned int)*size, cudaMemcpyDeviceToHost );
 
 	return array[0];
+}
+
+void warnup_gpu( unsigned int* array, int size )
+{
+	reduction_gpu( array, size );
 }

@@ -80,10 +80,12 @@
     <ClCompile Include="reduction.cpp" />
     <ClCompile Include="reduction_cpu.cpp" />
     <ClCompile Include="timerCPP.cpp" />
+    <ClCompile Include="timerCUDA.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="reduction_cpu.h" />
     <ClInclude Include="timerCPP.h" />
+    <ClInclude Include="timerCUDA.h" />
   </ItemGroup>
   <ItemGroup>
     <CudaCompile Include="reduction_gpu.cu">
