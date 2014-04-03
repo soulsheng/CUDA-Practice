@@ -5,7 +5,7 @@
 using namespace std;
 
 #define  PRINTMAX   1024
-float reduction_cpu2( float* array, int size )
+float reduction_cpu3( float* array, int size )
 {
 	float result = 0;
 	for ( int d=size/2;d>=1; d=d/2 )
@@ -20,7 +20,7 @@ float reduction_cpu2( float* array, int size )
 	return result;
 }
 
-float reduction_cpu( float* array, int size )
+float reduction_cpu2( float* array, int size )
 {
 	float result = 0;
 	for ( int d=1;d<=size/2; d=d*2 )

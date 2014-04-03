@@ -1,6 +1,6 @@
 
 
-float reduction_cpu( float* array, int size );
+float reduction_cpu3( float* array, int size );
 
 float reduction_cpu2( float* array, int size );
 

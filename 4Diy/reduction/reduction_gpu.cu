@@ -5,7 +5,7 @@
 
 #define  BLOCKDIM	256
 
-__global__ void reduction_kernel( float* array, int size )
+__global__ void reduction_kernel3( float* array, int size )
 {
 	__shared__ float sarray[BLOCKDIM];
 
@@ -83,7 +83,7 @@ void reduction_block( float* array, int offset, int size)
 		array[0] += array[i*offset] ;
 }
 
-float reduction_gpu( float* array, int size )
+float reduction_gpu3( float* array, int size )
 {
 	float* d_array ;
 	cudaMalloc( (void**)&d_array, sizeof(float)*size );
@@ -92,7 +92,27 @@ float reduction_gpu( float* array, int size )
 
 	int sizeBlock = size>BLOCKDIM?BLOCKDIM: size;
 	int countBlock = (size+ sizeBlock-1)/sizeBlock;
-	reduction_kernel<<< countBlock, sizeBlock >>>( d_array, size );
+	reduction_kernel3<<< countBlock, sizeBlock >>>( d_array, size );
+
+	cudaMemcpy( array, d_array, sizeof(float)*size, cudaMemcpyDeviceToHost );
+
+	cudaFree( d_array );
+
+	reduction_block( array, sizeBlock, countBlock );
+
+	return array[0];
+}
+
+float reduction_gpu2( float* array, int size )
+{
+	float* d_array ;
+	cudaMalloc( (void**)&d_array, sizeof(float)*size );
+
+	cudaMemcpy( d_array, array, sizeof(float)*size, cudaMemcpyHostToDevice );
+
+	int sizeBlock = size>BLOCKDIM?BLOCKDIM: size;
+	int countBlock = (size+ sizeBlock-1)/sizeBlock;
+	reduction_kernel2<<< countBlock, sizeBlock >>>( d_array, size );
 
 	cudaMemcpy( array, d_array, sizeof(float)*size, cudaMemcpyDeviceToHost );
 
@@ -125,5 +145,5 @@ float reduction_gpu1( float* array, int size )
 
 void warnup_gpu( float* array, int size )
 {
-	reduction_gpu( array, size );
+	reduction_gpu1( array, size );
 }

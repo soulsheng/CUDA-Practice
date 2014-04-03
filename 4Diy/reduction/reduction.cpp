@@ -28,26 +28,77 @@ void main()
 
 	float result = 0;
 	
+	//--CPU 版本1：直接累加----------	
 	timer.start();
 	for(int i=0;i<REPEAT;i++)
 	{
 		setArray( a, N );
-		result = reduction_cpu( a, N );
+		result = reduction_cpu1( a, N );
 	}
 	timer.stop();
 
-	cout << "reduction_cpu: " << result << ", timer: " << timer.getTime()/REPEAT << endl;
+	cout << "reduction_cpu 版本1：直接累加" << result << ", timer: " << timer.getTime()/REPEAT << endl;
 	printArray( a, N );
 
+	//--CPU 版本2：步长递增----------	
+	timer.start();
+	for(int i=0;i<REPEAT;i++)
+	{
+		setArray( a, N );
+		result = reduction_cpu2( a, N );
+	}
+	timer.stop();
+
+	cout << "reduction_cpu 版本2：步长递增" << result << ", timer: " << timer.getTime()/REPEAT << endl;
+	printArray( a, N );
+
+	//--CPU 版本3：步长递减----------	
+	timer.start();
+	for(int i=0;i<REPEAT;i++)
+	{
+		setArray( a, N );
+		result = reduction_cpu3( a, N );
+	}
+	timer.stop();
+
+	cout << "reduction_cpu 版本3：步长递减" << result << ", timer: " << timer.getTime()/REPEAT << endl;
+	printArray( a, N );
+
+	//--GPU 版本1：步长递增----------	
 	timerGPU.start();
 	for(int i=0;i<REPEAT;i++)
 	{
 		setArray( a, N );
-		result = reduction_gpu( a, N );
+		result = reduction_gpu1( a, N );
 	}
 	timerGPU.stop();
 
-	cout << "reduction_gpu: " << result << ", timer: " << timerGPU.getTime()/REPEAT <<endl;
+	cout << "reduction_gpu 版本1：步长递增" << result << ", timer: " << timerGPU.getTime()/REPEAT <<endl;
+	printArray( a, N );
+
+	//--GPU 版本2：步长递减----------	
+	timerGPU.start();
+	for(int i=0;i<REPEAT;i++)
+	{
+		setArray( a, N );
+		result = reduction_gpu2( a, N );
+	}
+	timerGPU.stop();
+
+	cout << "reduction_gpu 版本2：步长递减" << result << ", timer: " << timerGPU.getTime()/REPEAT <<endl;
+	printArray( a, N );
+
+	
+	//--GPU 版本3：shared----------	
+	timerGPU.start();
+	for(int i=0;i<REPEAT;i++)
+	{
+		setArray( a, N );
+		result = reduction_gpu2( a, N );
+	}
+	timerGPU.stop();
+
+	cout << "reduction_gpu 版本3：shared " << result << ", timer: " << timerGPU.getTime()/REPEAT <<endl;
 	printArray( a, N );
 
 	free( a );
