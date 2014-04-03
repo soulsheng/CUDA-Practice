@@ -4,7 +4,7 @@
 #include <iostream>
 using namespace std;
 
-unsigned int reduction_cpu( int* array, int size )
+unsigned int reduction_cpu2( unsigned int* array, int size )
 {
 	unsigned int result = 0;
 	for ( int d=size/2;d>=1; d=d/2 )
@@ -19,7 +19,7 @@ unsigned int reduction_cpu( int* array, int size )
 	return result;
 }
 
-unsigned int reduction_cpu2( int* array, int size )
+unsigned int reduction_cpu( unsigned int* array, int size )
 {
 	unsigned int result = 0;
 	for ( int d=1;d<=size/2; d=d*2 )
@@ -34,7 +34,7 @@ unsigned int reduction_cpu2( int* array, int size )
 	return result;
 }
 
-unsigned int reduction_cpu1( int* array, int size )
+unsigned int reduction_cpu1( unsigned int* array, int size )
 {
 	unsigned int result = 0;
 	for (int i=0;i<size;i++)
@@ -45,7 +45,7 @@ unsigned int reduction_cpu1( int* array, int size )
 	return result;
 }
 
-void setArray( int* array, int size )
+void setArray( unsigned int* array, int size )
 {
 	for ( int i=0;i<size; i++)
 	{
@@ -53,7 +53,7 @@ void setArray( int* array, int size )
 	}
 }
 
-void printArray( int* array, int size )
+void printArray( unsigned int* array, int size )
 {
 	if ( size>256 )
 	{
