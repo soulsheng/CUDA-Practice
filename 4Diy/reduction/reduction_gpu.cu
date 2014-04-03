@@ -7,6 +7,36 @@
 
 __global__ void reduction_kernel( float* array, int size )
 {
+	__shared__ float sarray[BLOCKDIM];
+
+	int bid = blockIdx.x;
+	int tid = threadIdx.x;
+	
+	if( bid*blockDim.x + tid > size )
+		return;
+
+	int offset = bid * blockDim.x;
+	float* arraySub = array + offset;
+
+	sarray[tid] = arraySub[tid];
+	__syncthreads();
+
+	for ( int d=blockDim.x/2;d>=1; d=d/2 )
+	{
+		__syncthreads();
+		if( tid < d )
+		{
+			sarray[tid] += sarray[tid+d];
+		}
+	}
+
+	arraySub[tid] = sarray[tid];
+	__syncthreads();
+
+}
+
+__global__ void reduction_kernel2( float* array, int size )
+{
 	int bid = blockIdx.x;
 	int tid = threadIdx.x;
 	
