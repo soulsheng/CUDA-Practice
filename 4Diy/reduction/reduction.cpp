@@ -8,7 +8,7 @@
 using namespace std;
 
 #define N (1<<21)
-#define REPEAT   100
+#define REPEAT   10
 
 
 void main()
