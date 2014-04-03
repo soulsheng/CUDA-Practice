@@ -3,7 +3,9 @@
 
 #include <cuda_runtime.h>
 
-__global__ void reduction_kernel( unsigned int* array, int size )
+#define  BLOCKDIM	128
+
+__global__ void reduction_kernel( float* array, int size )
 {
 	int bid = blockIdx.x;
 	int tid = threadIdx.x;
@@ -12,7 +14,7 @@ __global__ void reduction_kernel( unsigned int* array, int size )
 		return;
 
 	int offset = bid * blockDim.x;
-	unsigned int* arraySub = array + offset;
+	float* arraySub = array + offset;
 
 	for ( int d=1;d<=blockDim.x/2; d=d*2 )
 	{
@@ -22,7 +24,7 @@ __global__ void reduction_kernel( unsigned int* array, int size )
 			arraySub[tid] += arraySub[tid+d];
 		}
 	}
-#if 0
+#if 1
 	__syncthreads();
 
 	if(bid==0 && tid==0&& size>blockDim.x)
@@ -33,23 +35,23 @@ __global__ void reduction_kernel( unsigned int* array, int size )
 #endif
 }
 
-unsigned int reduction_gpu( unsigned int* array, int size )
+float reduction_gpu( float* array, int size )
 {
-	unsigned int* d_array ;
-	cudaMalloc( (void**)&d_array, sizeof(unsigned int)*size );
+	float* d_array ;
+	cudaMalloc( (void**)&d_array, sizeof(float)*size );
 
-	cudaMemcpy( d_array, array, sizeof(unsigned int)*size, cudaMemcpyHostToDevice );
+	cudaMemcpy( d_array, array, sizeof(float)*size, cudaMemcpyHostToDevice );
 
-	int sizeBlock = size>256?256: size;
+	int sizeBlock = size>BLOCKDIM?BLOCKDIM: size;
 	int countBlock = (size+ sizeBlock-1)/sizeBlock;
 	reduction_kernel<<< countBlock, sizeBlock >>>( d_array, size );
 
-	cudaMemcpy( array, d_array, sizeof(unsigned int)*size, cudaMemcpyDeviceToHost );
+	cudaMemcpy( array, d_array, sizeof(float)*size, cudaMemcpyDeviceToHost );
 
 	return array[0];
 }
 
-void warnup_gpu( unsigned int* array, int size )
+void warnup_gpu( float* array, int size )
 {
 	reduction_gpu( array, size );
 }

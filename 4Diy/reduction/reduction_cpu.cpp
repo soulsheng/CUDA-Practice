@@ -4,9 +4,10 @@
 #include <iostream>
 using namespace std;
 
-unsigned int reduction_cpu2( unsigned int* array, int size )
+#define  PRINTMAX   1024
+float reduction_cpu2( float* array, int size )
 {
-	unsigned int result = 0;
+	float result = 0;
 	for ( int d=size/2;d>=1; d=d/2 )
 	{
 		for ( int i=0;i< d; i++ )
@@ -19,9 +20,9 @@ unsigned int reduction_cpu2( unsigned int* array, int size )
 	return result;
 }
 
-unsigned int reduction_cpu( unsigned int* array, int size )
+float reduction_cpu( float* array, int size )
 {
-	unsigned int result = 0;
+	float result = 0;
 	for ( int d=1;d<=size/2; d=d*2 )
 	{
 		for ( int i=0;i< size; i+=2*d )
@@ -34,9 +35,9 @@ unsigned int reduction_cpu( unsigned int* array, int size )
 	return result;
 }
 
-unsigned int reduction_cpu1( unsigned int* array, int size )
+float reduction_cpu1( float* array, int size )
 {
-	unsigned int result = 0;
+	float result = 0;
 	for (int i=0;i<size;i++)
 	{
 		result += array[i];
@@ -45,7 +46,7 @@ unsigned int reduction_cpu1( unsigned int* array, int size )
 	return result;
 }
 
-void setArray( unsigned int* array, int size )
+void setArray( float* array, int size )
 {
 	for ( int i=0;i<size; i++)
 	{
@@ -53,9 +54,9 @@ void setArray( unsigned int* array, int size )
 	}
 }
 
-void printArray( unsigned int* array, int size )
+void printArray( float* array, int size )
 {
-	if ( size>256 )
+	if ( size>PRINTMAX )
 	{
 		return;
 	}

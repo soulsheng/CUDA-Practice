@@ -1,11 +1,11 @@
 
 
-unsigned int reduction_cpu( unsigned int* array, int size );
+float reduction_cpu( float* array, int size );
 
-unsigned int reduction_cpu2( unsigned int* array, int size );
+float reduction_cpu2( float* array, int size );
 
-unsigned int reduction_cpu1( unsigned int* array, int size );
+float reduction_cpu1( float* array, int size );
 
-void setArray( unsigned int* array, int size );
+void setArray( float* array, int size );
 
-void printArray( unsigned int* array, int size ) ;
+void printArray( float* array, int size ) ;

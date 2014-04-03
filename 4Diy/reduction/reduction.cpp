@@ -7,7 +7,7 @@
 #include <iostream>
 using namespace std;
 
-#define N (1<<8)
+#define N (1<<21)
 #define REPEAT   100
 
 
@@ -16,7 +16,7 @@ void main()
 	timerC  timer;
 	timerC  timerGPU;
 	
-	unsigned int *a = (unsigned int *)malloc( N*sizeof(unsigned int) );
+	float *a = (float *)malloc( N*sizeof(float) );
 	setArray( a, N );
 
 	warnup_gpu( a, N );
@@ -26,7 +26,7 @@ void main()
 	cout << "setArray" <<endl;
 	printArray( a, N );
 
-	unsigned int result = 0;
+	float result = 0;
 	
 	timer.start();
 	for(int i=0;i<REPEAT;i++)
