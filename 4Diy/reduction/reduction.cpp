@@ -6,8 +6,8 @@
 #include <iostream>
 using namespace std;
 
-#define N 1024
-
+#define N (1<<24)
+#define REPEAT   100
 
 
 void main()
@@ -22,13 +22,14 @@ void main()
 	cout << "setArray" <<endl;
 	printArray( a, N );
 
-	int result = 0;
+	unsigned int result = 0;
 	
 	timer.start();
+	for(int i=0;i<REPEAT;i++)
 	result = reduction_cpu( a, N );
 	timer.stop();
 
-	cout << "reduction_cpu: " << result << ", timer: " << timer.getTime() << endl;
+	cout << "reduction_cpu: " << result << ", timer: " << timer.getTime()/REPEAT << endl;
 	printArray( a, N );
 
 	result = reduction_gpu( a, N );
@@ -36,5 +37,5 @@ void main()
 	cout << "reduction_gpu: " << result <<endl;
 	printArray( a, N );
 
-
+	free( a );
 }
