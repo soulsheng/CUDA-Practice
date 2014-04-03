@@ -34,3 +34,8 @@
 /4Diy/cuOpti/*.pdb
 /4Diy/cuOpti/Release
 /4Diy/Release
+/4Diy/reduction/Release
+/4Diy/reduction/*.pdb
+/4Diy/reduction/*.user
+/4Diy/*.suo
+/4Diy/ipch
