@@ -78,9 +78,11 @@
   <ItemGroup>
     <ClCompile Include="reduction.cpp" />
     <ClCompile Include="reduction_cpu.cpp" />
+    <ClCompile Include="timerCPP.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="reduction_cpu.h" />
+    <ClInclude Include="timerCPP.h" />
   </ItemGroup>
   <ItemGroup>
     <CudaCompile Include="reduction_gpu.cu">

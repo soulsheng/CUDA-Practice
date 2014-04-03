@@ -21,9 +21,15 @@
     <ClCompile Include="reduction_cpu.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="timerCPP.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="reduction_cpu.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="timerCPP.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
