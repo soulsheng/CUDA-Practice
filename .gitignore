@@ -44,3 +44,7 @@
 /4Diy/vectorDot/Debug
 /4Diy/vectorDot/Release
 /4Diy/vectorDot/*.pdb
+/4Diy/scan/*.pdb
+/4Diy/scan/Release
+/4Diy/scan/Debug
+/4Diy/scan/*.user
