@@ -40,16 +40,28 @@ void main()
 	setArray( a, N );
 	warnup_gpu( a, N );
 
-	//--GPU 版本：shared----------	
+	//--GPU 版本1：行串行----------	
 	timerGPU.start();
 	for(int i=0;i<REPEAT;i++)
 	{
 		setArray( a, N );
-		result = scan_gpu( a, N );
+		result = scan_gpu1( a, N );
 	}
 	timerGPU.stop();
 
-	cout << "scan_gpu 版本：shared " << result << ", timer: " << timerGPU.getTime()/REPEAT <<endl;
+	cout << "scan_gpu 版本1：行串行 " << result << ", timer: " << timerGPU.getTime()/REPEAT <<endl;
+	printArray( a, N );
+
+	//--GPU 版本2：shared----------	
+	timerGPU.start();
+	for(int i=0;i<REPEAT;i++)
+	{
+		setArray( a, N );
+		result = scan_gpu2( a, N );
+	}
+	timerGPU.stop();
+
+	cout << "scan_gpu 版本2：shared " << result << ", timer: " << timerGPU.getTime()/REPEAT <<endl;
 	printArray( a, N );
 
 	free( a );
