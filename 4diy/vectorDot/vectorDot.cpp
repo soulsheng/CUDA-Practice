@@ -81,19 +81,20 @@ void main()
 
 	cout << "vectorDot_gpu 版本1：直接累加" << ", timer: " << timerGPU.getTime()/REPEAT <<endl;
 	printArray( c, N );
-#if 0
-	//--GPU 版本2：步长递减----------	
+	
+	//--GPU 版本2：合并----------	
 	timerGPU.start();
 	for(int i=0;i<REPEAT;i++)
 	{
 		setArray( a, N );
-		result = vectorDot_gpu2( a,  b, N );
+		vectorDot_gpu2( a,  b, c, N );
 	}
 	timerGPU.stop();
 
-	cout << "vectorDot_gpu 版本2：步长递减" << result << ", timer: " << timerGPU.getTime()/REPEAT <<endl;
+	cout << "vectorDot_gpu 版本2：合并" << ", timer: " << timerGPU.getTime()/REPEAT <<endl;
 	printArray( a, N );
 
+#if 0
 	
 	//--GPU 版本3：shared----------	
 	timerGPU.start();

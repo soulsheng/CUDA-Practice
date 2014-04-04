@@ -10,8 +10,10 @@ void vectorDot_cpu1( float* arrayA, float* arrayB, float* arrayC, int size )
 {
 	for (int i=0;i<size;i++)
 	{
-		arrayC[i] = arrayA[3*i]*arrayB[3*i] + arrayA[3*i+1]*arrayB[3*i+1] + 
-			arrayA[3*i+2]*arrayB[3*i+2];
+		arrayC[i] = 
+			arrayA[3*i]*arrayB[3*i] + 
+			arrayA[3*i+1]*arrayB[3*i+1] + 
+			arrayA[3*i+1]*arrayB[3*i+1];
 	}
 }
 
