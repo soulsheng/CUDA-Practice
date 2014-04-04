@@ -6,7 +6,7 @@
 #include <iostream>
 using namespace std;
 
-#define N (1<<21)
+#define N (1<<20)
 #define REPEAT   10
 
 
@@ -18,8 +18,6 @@ void main()
 	float *a = (float *)malloc( N*sizeof(float) );
 	setArray( a, N );
 
-	warnup_gpu( a, N );
-
 	cout << "size: " << N << endl << endl ;
 
 	cout << "setArray" <<endl;
@@ -27,7 +25,7 @@ void main()
 
 	float result = 0;
 	
-	//--CPU 版本1：直接累加----------	
+	//--CPU 版本：直接累加----------	
 	timer.start();
 	for(int i=0;i<REPEAT;i++)
 	{
@@ -36,43 +34,22 @@ void main()
 	}
 	timer.stop();
 
-	cout << "scan_cpu 版本1：直接累加" << result << ", timer: " << timer.getTime()/REPEAT << endl;
+	cout << "scan_cpu 版本：直接累加" << result << ", timer: " << timer.getTime()/REPEAT << endl;
 	printArray( a, N );
 
-	//--CPU 版本2：步长递增----------	
-	timer.start();
-	for(int i=0;i<REPEAT;i++)
-	{
-		setArray( a, N );
-		result = scan_cpu2( a, N );
-	}
-	timer.stop();
+	setArray( a, N );
+	warnup_gpu( a, N );
 
-	cout << "scan_cpu 版本2：步长递增" << result << ", timer: " << timer.getTime()/REPEAT << endl;
-	printArray( a, N );
-
-	//--GPU 版本1：步长递增----------	
+	//--GPU 版本：shared----------	
 	timerGPU.start();
 	for(int i=0;i<REPEAT;i++)
 	{
 		setArray( a, N );
-		result = scan_gpu1( a, N );
+		result = scan_gpu( a, N );
 	}
 	timerGPU.stop();
 
-	cout << "scan_gpu 版本1：步长递增" << result << ", timer: " << timerGPU.getTime()/REPEAT <<endl;
-	printArray( a, N );
-	
-	//--GPU 版本2：shared----------	
-	timerGPU.start();
-	for(int i=0;i<REPEAT;i++)
-	{
-		setArray( a, N );
-		result = scan_gpu2( a, N );
-	}
-	timerGPU.stop();
-
-	cout << "scan_gpu 版本2：shared " << result << ", timer: " << timerGPU.getTime()/REPEAT <<endl;
+	cout << "scan_gpu 版本：shared " << result << ", timer: " << timerGPU.getTime()/REPEAT <<endl;
 	printArray( a, N );
 
 	free( a );

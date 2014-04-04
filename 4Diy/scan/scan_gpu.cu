@@ -5,65 +5,34 @@
 
 #define  BLOCKDIM	256
 
-__global__ void scan_kernel2( float* array, int size )
+__global__ void scan_kernel( float* array, int size )
 {
-	__shared__ float sarray[BLOCKDIM];
+	int index = blockIdx.x * blockDim.x + threadIdx.x;
 
-	int bid = blockIdx.x;
-	int tid = threadIdx.x;
-	
-	if( bid*blockDim.x + tid > size )
+	if( index > size )
 		return;
 
-	int offset = bid * blockDim.x;
-	float* arraySub = array + offset;
+	__shared__ float sdata[BLOCKDIM*2];
 
-	sarray[tid] = arraySub[tid];
+	sdata[threadIdx.x] = array[index];
 	__syncthreads();
 
-	for ( int d=blockDim.x/2;d>=1; d=d/2 )
+	int first = 0;
+
+	for ( int d=1;d<=blockDim.x/2; d+=d, first=BLOCKDIM-first )
 	{
+		if( threadIdx.x < d )
+			sdata[threadIdx.x+BLOCKDIM-first] = sdata[threadIdx.x+first];
+		else
+			sdata[threadIdx.x+BLOCKDIM-first] = sdata[threadIdx.x+first] + sdata[threadIdx.x-d+first];
 		__syncthreads();
-		if( tid < d )
-		{
-			sarray[tid] += sarray[tid+d];
-		}
 	}
 
-	arraySub[tid] = sarray[tid];
+	array[index] = sdata[threadIdx.x+first];
 	__syncthreads();
-
 }
 
-
-__global__ void scan_kernel1( float* array, int size )
-{
-	int bid = blockIdx.x;
-	int tid = threadIdx.x;
-	
-	if( bid*blockDim.x + tid > size )
-		return;
-
-	int offset = bid * blockDim.x;
-	float* arraySub = array + offset;
-
-	for ( int d=1;d<=blockDim.x/2; d=d*2 )
-	{
-		__syncthreads();
-		if( tid % (2*d) == 0)
-		{
-			arraySub[tid] += arraySub[tid+d];
-		}
-	}
-}
-
-void scan_block( float* array, int offset, int size)
-{
-	for(int i=0;i<size;i++)
-		array[0] += array[i*offset] ;
-}
-
-float scan_gpu2( float* array, int size )
+float scan_gpu( float* array, int size )
 {
 	float* d_array ;
 	cudaMalloc( (void**)&d_array, sizeof(float)*size );
@@ -72,38 +41,16 @@ float scan_gpu2( float* array, int size )
 
 	int sizeBlock = size>BLOCKDIM?BLOCKDIM: size;
 	int countBlock = (size+ sizeBlock-1)/sizeBlock;
-	scan_kernel2<<< countBlock, sizeBlock >>>( d_array, size );
+	scan_kernel<<< countBlock, sizeBlock >>>( d_array, size );
 
 	cudaMemcpy( array, d_array, sizeof(float)*size, cudaMemcpyDeviceToHost );
 
 	cudaFree( d_array );
 
-	scan_block( array, sizeBlock, countBlock );
-
-	return array[0];
-}
-
-float scan_gpu1( float* array, int size )
-{
-	float* d_array ;
-	cudaMalloc( (void**)&d_array, sizeof(float)*size );
-
-	cudaMemcpy( d_array, array, sizeof(float)*size, cudaMemcpyHostToDevice );
-
-	int sizeBlock = size>BLOCKDIM?BLOCKDIM: size;
-	int countBlock = (size+ sizeBlock-1)/sizeBlock;
-	scan_kernel1<<< countBlock, sizeBlock >>>( d_array, size );
-
-	cudaMemcpy( array, d_array, sizeof(float)*size, cudaMemcpyDeviceToHost );
-
-	cudaFree( d_array );
-
-	scan_block( array, sizeBlock, countBlock );
-
-	return array[0];
+	return array[size-1];
 }
 
 void warnup_gpu( float* array, int size )
 {
-	scan_gpu1( array, size );
+	scan_gpu( array, size );
 }
