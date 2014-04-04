@@ -51,18 +51,6 @@ void main()
 	cout << "scan_cpu 版本2：步长递增" << result << ", timer: " << timer.getTime()/REPEAT << endl;
 	printArray( a, N );
 
-	//--CPU 版本3：步长递减----------	
-	timer.start();
-	for(int i=0;i<REPEAT;i++)
-	{
-		setArray( a, N );
-		result = scan_cpu3( a, N );
-	}
-	timer.stop();
-
-	cout << "scan_cpu 版本3：步长递减" << result << ", timer: " << timer.getTime()/REPEAT << endl;
-	printArray( a, N );
-
 	//--GPU 版本1：步长递增----------	
 	timerGPU.start();
 	for(int i=0;i<REPEAT;i++)
@@ -74,21 +62,8 @@ void main()
 
 	cout << "scan_gpu 版本1：步长递增" << result << ", timer: " << timerGPU.getTime()/REPEAT <<endl;
 	printArray( a, N );
-
-	//--GPU 版本2：步长递减----------	
-	timerGPU.start();
-	for(int i=0;i<REPEAT;i++)
-	{
-		setArray( a, N );
-		result = scan_gpu2( a, N );
-	}
-	timerGPU.stop();
-
-	cout << "scan_gpu 版本2：步长递减" << result << ", timer: " << timerGPU.getTime()/REPEAT <<endl;
-	printArray( a, N );
-
 	
-	//--GPU 版本3：shared----------	
+	//--GPU 版本2：shared----------	
 	timerGPU.start();
 	for(int i=0;i<REPEAT;i++)
 	{
@@ -97,7 +72,7 @@ void main()
 	}
 	timerGPU.stop();
 
-	cout << "scan_gpu 版本3：shared " << result << ", timer: " << timerGPU.getTime()/REPEAT <<endl;
+	cout << "scan_gpu 版本2：shared " << result << ", timer: " << timerGPU.getTime()/REPEAT <<endl;
 	printArray( a, N );
 
 	free( a );

@@ -5,45 +5,56 @@
 using namespace std;
 
 #define  PRINTMAX   1024
-float scan_cpu3( float* array, int size )
-{
-	float result = 0;
-	for ( int d=size/2;d>=1; d=d/2 )
-	{
-		for ( int i=0;i< d; i++ )
-		{
-			array[i] += array[i+d];
-		}
-	}
-
-	result = array[0];
-	return result;
-}
 
 float scan_cpu2( float* array, int size )
 {
+	float* temp = (float*)malloc( size* sizeof(float) );
+	temp[0] = array[0];
+	float* pSrc = NULL;
+	float* pDst = NULL;
+
 	float result = 0;
-	for ( int d=1;d<=size/2; d=d*2 )
+	for ( int d=1, round=0;d<=size/2; d+=d, round++ )
 	{
-		for ( int i=0;i< size; i+=2*d )
+		if ( round%2 )
 		{
-			array[i] += array[i+d];
+			pSrc = temp;
+			pDst = array;
 		}
+		else
+		{
+			pSrc = array;
+			pDst = temp;
+		}
+
+		for ( int i=d;i< size; i++ )
+		{
+			pDst[i] = pSrc[i] + pSrc[i-d];
+		}
+
+		for( int i=0;i<d;i++)
+			pDst[i] = pSrc[i];
+	}
+	
+	if (pDst!=array)
+	{
+		memcpy( array, pDst, size * sizeof(float) );
 	}
 
-	result = array[0];
+	result = pDst[size-1];
+	free(temp);
 	return result;
 }
 
 float scan_cpu1( float* array, int size )
 {
 	float result = 0;
-	for (int i=0;i<size;i++)
+	for (int i=1;i<size;i++)
 	{
-		result += array[i];
+		array[i] += array[i-1];
 	}
 
-	return result;
+	return array[size-1];
 }
 
 void setArray( float* array, int size )
