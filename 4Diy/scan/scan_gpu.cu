@@ -3,13 +3,13 @@
 
 #include <cuda_runtime.h>
 
-#define  BLOCKDIM	(1<<8)
+#define  BLOCKDIM_MAX	(1<<10)
 
 __global__ void scan_kernel1( float* array, int size, int width )
 {
 	int row = threadIdx.x;
 
-	int WIDTH = size/BLOCKDIM ;
+	int WIDTH = size/BLOCKDIM_MAX ;
 
 	for (int i=1;i<WIDTH;i++)
 	{
@@ -25,7 +25,7 @@ float scan_gpu1( float* array, int size, int width )
 
 	cudaMemcpy( d_array, array, sizeof(float)*size, cudaMemcpyHostToDevice );
 
-	int sizeBlock = size/BLOCKDIM > BLOCKDIM?BLOCKDIM: size/BLOCKDIM;
+	int sizeBlock = size/BLOCKDIM_MAX > BLOCKDIM_MAX?BLOCKDIM_MAX: size/BLOCKDIM_MAX;
 	int countBlock = 1;
 	scan_kernel1<<< 1, sizeBlock >>>( d_array, size, width );
 
@@ -43,7 +43,7 @@ __global__ void scan_kernel2( float* array, int size, int width )
 	if( index > size )
 		return;
 
-	__shared__ float sdata[BLOCKDIM*2];
+	__shared__ float sdata[BLOCKDIM_MAX*2];
 
 	sdata[threadIdx.x] = array[index];
 	__syncthreads();
@@ -70,7 +70,7 @@ float scan_gpu2( float* array, int size, int width )
 
 	cudaMemcpy( d_array, array, sizeof(float)*size, cudaMemcpyHostToDevice );
 
-	int sizeBlock = width>BLOCKDIM?BLOCKDIM: width;
+	int sizeBlock = width>BLOCKDIM_MAX?BLOCKDIM_MAX: width;
 	int countBlock = size / width ;// 行数，一个block处理一行
 	scan_kernel2<<< countBlock, sizeBlock >>>( d_array, size, width );
 
