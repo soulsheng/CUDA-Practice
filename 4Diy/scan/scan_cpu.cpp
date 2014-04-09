@@ -6,7 +6,7 @@ using namespace std;
 
 #define  PRINTMAX   1024
 
-float scan_cpu2( float* array, int size )
+float scan_cpu2( float* array, int size, int width )
 {
 	float* temp = (float*)malloc( size* sizeof(float) );
 	temp[0] = array[0];
@@ -46,7 +46,7 @@ float scan_cpu2( float* array, int size )
 	return result;
 }
 
-float scan_cpu1( float* array, int size )
+float scan_cpu1( float* array, int size, int width )
 {
 	float result = 0;
 	for (int i=1;i<size;i++)
@@ -65,7 +65,7 @@ void setArray( float* array, int size )
 	}
 }
 
-void printArray( float* array, int size )
+void printArray( float* array, int size, int width )
 {
 	if ( size>PRINTMAX )
 	{
@@ -74,6 +74,10 @@ void printArray( float* array, int size )
 	for ( int i=0;i<size; i++)
 	{
 		cout << array[i] << " ";
+		if ( (i+1)%width==0)
+		{
+			cout << endl;
+		}
 	}
 	cout << endl << endl;
 }
