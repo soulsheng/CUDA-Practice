@@ -1,8 +1,7 @@
 
-#include "vectorDot_cpu.h"
-#include "vectorDot_gpu.cuh"
+#include "rgb2gray_cpu.h"
+#include "rgb2gray_gpu.cuh"
 #include "timerCPP.h"
-#include "timerCUDA.h"
 
 #include <iostream>
 using namespace std;
@@ -39,11 +38,11 @@ void main()
 	for(int i=0;i<REPEAT;i++)
 	{
 		setArray( a, N );
-		vectorDot_cpu1( a, b, c, N );
+		rgb2gray_cpu1( a, b, c, N );
 	}
 	timer.stop();
 
-	cout << "vectorDot_cpu 版本1：直接累加" << ", timer: " << timer.getTime()/REPEAT << endl;
+	cout << "rgb2gray_cpu 版本1：直接累加" << ", timer: " << timer.getTime()/REPEAT << endl;
 	printArray( c, N );
 #if 0
 	//--CPU 版本2：步长递增----------	
@@ -51,11 +50,11 @@ void main()
 	for(int i=0;i<REPEAT;i++)
 	{
 		setArray( a, N );
-		result = vectorDot_cpu2( a, b,  N );
+		result = rgb2gray_cpu2( a, b,  N );
 	}
 	timer.stop();
 
-	cout << "vectorDot_cpu 版本2：步长递增" << result << ", timer: " << timer.getTime()/REPEAT << endl;
+	cout << "rgb2gray_cpu 版本2：步长递增" << result << ", timer: " << timer.getTime()/REPEAT << endl;
 	printArray( a, N );
 
 	//--CPU 版本3：步长递减----------	
@@ -63,11 +62,11 @@ void main()
 	for(int i=0;i<REPEAT;i++)
 	{
 		setArray( a, N );
-		result = vectorDot_cpu3( a, b,  N );
+		result = rgb2gray_cpu3( a, b,  N );
 	}
 	timer.stop();
 
-	cout << "vectorDot_cpu 版本3：步长递减" << result << ", timer: " << timer.getTime()/REPEAT << endl;
+	cout << "rgb2gray_cpu 版本3：步长递减" << result << ", timer: " << timer.getTime()/REPEAT << endl;
 	printArray( a, N );
 #endif
 	//--GPU 版本1：直接累加----------	
@@ -75,11 +74,11 @@ void main()
 	for(int i=0;i<REPEAT;i++)
 	{
 		setArray( a, N );
-		vectorDot_gpu1( a,  b, c, N );
+		rgb2gray_gpu1( a,  b, c, N );
 	}
 	timerGPU.stop();
 
-	cout << "vectorDot_gpu 版本1：直接累加" << ", timer: " << timerGPU.getTime()/REPEAT <<endl;
+	cout << "rgb2gray_gpu 版本1：直接累加" << ", timer: " << timerGPU.getTime()/REPEAT <<endl;
 	printArray( c, N );
 	
 	//--GPU 版本2：合并----------	
@@ -87,11 +86,11 @@ void main()
 	for(int i=0;i<REPEAT;i++)
 	{
 		setArray( a, N );
-		vectorDot_gpu2( a,  b, c, N );
+		rgb2gray_gpu2( a,  b, c, N );
 	}
 	timerGPU.stop();
 
-	cout << "vectorDot_gpu 版本2：合并" << ", timer: " << timerGPU.getTime()/REPEAT <<endl;
+	cout << "rgb2gray_gpu 版本2：合并" << ", timer: " << timerGPU.getTime()/REPEAT <<endl;
 	printArray( a, N );
 
 #if 0
@@ -101,11 +100,11 @@ void main()
 	for(int i=0;i<REPEAT;i++)
 	{
 		setArray( a, N );
-		result = vectorDot_gpu2( a,  b, N );
+		result = rgb2gray_gpu2( a,  b, N );
 	}
 	timerGPU.stop();
 
-	cout << "vectorDot_gpu 版本3：shared " << result << ", timer: " << timerGPU.getTime()/REPEAT <<endl;
+	cout << "rgb2gray_gpu 版本3：shared " << result << ", timer: " << timerGPU.getTime()/REPEAT <<endl;
 	printArray( a, N );
 #endif
 	free( a ); free( b ); free( c );

@@ -1,12 +1,12 @@
 
-#include "vectorDot_cpu.h"
+#include "rgb2gray_cpu.h"
 
 #include <cuda_runtime.h>
 
 #define  BLOCKDIM	256
 
 
-__global__ void vectorDot_kernel2( float* arrayA, float* arrayB, float* arrayC, int size )
+__global__ void rgb2gray_kernel2( float* arrayA, float* arrayB, float* arrayC, int size )
 {
 	int bid = blockIdx.x;
 	int tid = threadIdx.x;
@@ -20,7 +20,7 @@ __global__ void vectorDot_kernel2( float* arrayA, float* arrayB, float* arrayC, 
 	+ arrayA[ index +size*2] * arrayB[ index +size*2]  ;
 }
 
-void vectorDot_gpu2( float* arrayA, float* arrayB, float* arrayC, int size )
+void rgb2gray_gpu2( float* arrayA, float* arrayB, float* arrayC, int size )
 {
 	float* d_arrayA ;
 	cudaMalloc( (void**)&d_arrayA, sizeof(float)*size*3 );
@@ -37,7 +37,7 @@ void vectorDot_gpu2( float* arrayA, float* arrayB, float* arrayC, int size )
 
 	int sizeBlock = size>BLOCKDIM?BLOCKDIM: size;
 	int countBlock = (size+ sizeBlock-1)/sizeBlock;
-	vectorDot_kernel2<<< countBlock, sizeBlock >>>(  d_arrayA,  d_arrayB, d_arrayC, size );
+	rgb2gray_kernel2<<< countBlock, sizeBlock >>>(  d_arrayA,  d_arrayB, d_arrayC, size );
 
 	cudaMemcpy( arrayC, d_arrayC, sizeof(float)*size, cudaMemcpyDeviceToHost );
 
@@ -47,7 +47,7 @@ void vectorDot_gpu2( float* arrayA, float* arrayB, float* arrayC, int size )
 
 }
 
-__global__ void vectorDot_kernel1( float* arrayA, float* arrayB, float* arrayC, int size )
+__global__ void rgb2gray_kernel1( float* arrayA, float* arrayB, float* arrayC, int size )
 {
 	int bid = blockIdx.x;
 	int tid = threadIdx.x;
@@ -62,7 +62,7 @@ __global__ void vectorDot_kernel1( float* arrayA, float* arrayB, float* arrayC, 
 	+ arrayA[ index*3 +2] * arrayB[ index*3 +2]  ;
 }
 
-void vectorDot_gpu1( float* arrayA, float* arrayB, float* arrayC, int size )
+void rgb2gray_gpu1( float* arrayA, float* arrayB, float* arrayC, int size )
 {
 	float* d_arrayA ;
 	cudaMalloc( (void**)&d_arrayA, sizeof(float)*size*3 );
@@ -79,7 +79,7 @@ void vectorDot_gpu1( float* arrayA, float* arrayB, float* arrayC, int size )
 
 	int sizeBlock = size>BLOCKDIM?BLOCKDIM: size;
 	int countBlock = (size+ sizeBlock-1)/sizeBlock;
-	vectorDot_kernel1<<< countBlock, sizeBlock >>>( d_arrayA, d_arrayB, d_arrayC, size );
+	rgb2gray_kernel1<<< countBlock, sizeBlock >>>( d_arrayA, d_arrayB, d_arrayC, size );
 
 	cudaMemcpy( arrayC, d_arrayC, sizeof(float)*size, cudaMemcpyDeviceToHost );
 
@@ -91,5 +91,5 @@ void vectorDot_gpu1( float* arrayA, float* arrayB, float* arrayC, int size )
 
 void warnup_gpu( float* arrayA, float* arrayB, float* arrayC, int size )
 {
-	vectorDot_gpu1( arrayA, arrayB, arrayC, size );
+	rgb2gray_gpu1( arrayA, arrayB, arrayC, size );
 }

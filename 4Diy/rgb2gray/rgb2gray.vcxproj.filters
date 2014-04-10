@@ -18,9 +18,6 @@
     <ClCompile Include="timerCPP.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="timerCUDA.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="rgb2gray.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
@@ -30,9 +27,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="timerCPP.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="timerCUDA.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="rgb2gray_cpu.h">

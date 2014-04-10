@@ -11,7 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{2A7FDF30-A11C-4B12-A6C8-6D7228212ABB}</ProjectGuid>
+    <ProjectGuid>{968FEA01-0746-4F50-9BFC-F2B84F09E6EC}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>rgb2gray</RootNamespace>
   </PropertyGroup>
@@ -80,12 +80,10 @@
     <ClCompile Include="rgb2gray.cpp" />
     <ClCompile Include="rgb2gray_cpu.cpp" />
     <ClCompile Include="timerCPP.cpp" />
-    <ClCompile Include="timerCUDA.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="rgb2gray_cpu.h" />
     <ClInclude Include="timerCPP.h" />
-    <ClInclude Include="timerCUDA.h" />
   </ItemGroup>
   <ItemGroup>
     <CudaCompile Include="rgb2gray_gpu.cu">

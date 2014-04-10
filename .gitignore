@@ -57,3 +57,7 @@
 /4Diy/boxfilter/Release
 /4Diy/boxfilter/*.user
 /4Diy/boxfilter/*.pdb
+/4diy/rgb2gray/Release
+/4diy/rgb2gray/Debug
+/4diy/rgb2gray/*.pdb
+/4diy/rgb2gray/*.user

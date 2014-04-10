@@ -1,12 +1,12 @@
 
-#include "vectorDot_cpu.h"
+#include "rgb2gray_cpu.h"
 
 #include <iostream>
 using namespace std;
 
 #define  PRINTMAX   1024
 
-void vectorDot_cpu1( float* arrayA, float* arrayB, float* arrayC, int size )
+void rgb2gray_cpu1( float* arrayA, float* arrayB, float* arrayC, int size )
 {
 	for (int i=0;i<size;i++)
 	{
