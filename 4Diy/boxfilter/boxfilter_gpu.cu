@@ -78,7 +78,7 @@ __global__ void boxfilter_kernel2( float* array, int size, int width, int r )
 		return;
 
 	__shared__ float sdata[BLOCKDIM_MAX*2];
-
+	// 第一步，扫描累加
 	sdata[threadIdx.x] = array[index];
 	__syncthreads();
 
@@ -93,7 +93,23 @@ __global__ void boxfilter_kernel2( float* array, int size, int width, int r )
 		__syncthreads();
 	}
 
-	array[index] = sdata[threadIdx.x+first];
+	// 第二步，等间隔相减
+	int i=threadIdx.x;
+
+	if(threadIdx.x<=r)
+	{
+		sdata[threadIdx.x+blockDim.x-first] = sdata[threadIdx.x+first + r] ;
+	}
+	else if( threadIdx.x>r && threadIdx.x<width-r )
+	{
+		sdata[threadIdx.x+blockDim.x-first] = sdata[threadIdx.x+first + r] - sdata[threadIdx.x+first -r-1];
+	}
+	else//if( threadIdx.x>width-r && threadIdx.x<width )
+	{
+		sdata[threadIdx.x+blockDim.x-first] = sdata[first + width-1] - sdata[threadIdx.x+first -r-1];
+	}
+
+	array[index] = sdata[threadIdx.x+blockDim.x-first];
 	__syncthreads();
 }
 
