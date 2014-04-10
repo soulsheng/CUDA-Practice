@@ -6,8 +6,7 @@
 #include <iostream>
 using namespace std;
 
-#define N (1<<6)
-#define REPEAT   10
+#include "defineMacro.h"
 
 
 void main()

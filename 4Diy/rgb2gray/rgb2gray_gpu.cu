@@ -3,10 +3,7 @@
 
 #include <cuda_runtime.h>
 
-#define  BLOCKDIM	256
-#define		R_RATIO	0.299f
-#define		G_RATIO	0.587f
-#define		B_RATIO	0.114f
+#include "defineMacro.h"
 
 __global__ void rgb2gray_kernel2( float* rgb, float* gray, int size )
 {

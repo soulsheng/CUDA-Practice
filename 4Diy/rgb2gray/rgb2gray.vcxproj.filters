@@ -32,6 +32,9 @@
     <ClInclude Include="rgb2gray_cpu.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="defineMacro.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="rgb2gray_gpu.cuh" />

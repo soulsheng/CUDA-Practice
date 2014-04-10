@@ -4,10 +4,7 @@
 #include <iostream>
 using namespace std;
 
-#define  PRINTMAX   1024
-#define		R_RATIO	0.299f
-#define		G_RATIO	0.587f
-#define		B_RATIO	0.114f
+#include "defineMacro.h"
 
 void rgb2gray_cpu1( float* rgb, float* gray, int size )
 {

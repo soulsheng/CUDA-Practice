@@ -82,6 +82,7 @@
     <ClCompile Include="timerCPP.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="defineMacro.h" />
     <ClInclude Include="rgb2gray_cpu.h" />
     <ClInclude Include="timerCPP.h" />
   </ItemGroup>
