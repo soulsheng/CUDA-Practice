@@ -59,8 +59,8 @@ float boxfilter_cpu1( float* array, int size, int width, int r )
 		}
 	}
 #if 1	
-	float* arrayTemp = (float*)malloc( size*sizeof(float) );
-	memcpy(arrayTemp, array, size*sizeof(float) );
+	float* arrayBackup = (float*)malloc( size*sizeof(float) );
+	memcpy(arrayBackup, array, size*sizeof(float) );
 
 	// 第二步，等间隔相减
 	int nRight=0, nLeft=0;
@@ -72,24 +72,24 @@ float boxfilter_cpu1( float* array, int size, int width, int r )
 			{
 				nLeft = 0;
 				nRight = i+r;
-				array[i+row*width] = arrayTemp[row*width + nRight] ;
+				array[i+row*width] = arrayBackup[row*width + nRight] ;
 			}
 			else if( i>r && i<width-r )
 			{
 				nLeft = i-r-1;
 				nRight = i+r;
-				array[i+row*width] = arrayTemp[row*width + nRight] - arrayTemp[row*width + nLeft];
+				array[i+row*width] = arrayBackup[row*width + nRight] - arrayBackup[row*width + nLeft];
 			}
 			else//if( i>width-r && i<width )
 			{
 				nLeft = i-r-1;
 				nRight = width-1;
-				array[i+row*width] = arrayTemp[row*width + nRight] - arrayTemp[row*width + nLeft];
+				array[i+row*width] = arrayBackup[row*width + nRight] - arrayBackup[row*width + nLeft];
 			}
 		}
 	}
 
-	free(arrayTemp);
+	free(arrayBackup);
 #endif
 	return array[size-1];
 }

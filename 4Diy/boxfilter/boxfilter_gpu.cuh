@@ -1,10 +1,10 @@
 
 
-void warnup_gpu( float* array, int size, int width );
+void warnup_gpu( float* array, int size, int width, int r=1 );
 
 
 // GPU 版本1 行串行
-float boxfilter_gpu1( float* array, int size, int width );
+float boxfilter_gpu1( float* array, int size, int width, int r=1 );
 
 // GPU 版本2 shared
-float boxfilter_gpu2( float* array, int size, int width );
+float boxfilter_gpu2( float* array, int size, int width, int r=1 );

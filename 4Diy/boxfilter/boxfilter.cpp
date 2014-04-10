@@ -48,7 +48,7 @@ void main()
 	for(int i=0;i<REPEAT;i++)
 	{
 		setArray( a, N );
-		result = boxfilter_gpu1( a, N, WIDTH );
+		result = boxfilter_gpu1( a, N, WIDTH, RADIUS );
 	}
 	timerGPU.stop();
 
