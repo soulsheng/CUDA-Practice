@@ -15,10 +15,10 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="scan.cpp">
+    <ClCompile Include="boxfilter.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="scan_cpu.cpp">
+    <ClCompile Include="boxfilter_cpu.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="timerCPP.cpp">
@@ -26,7 +26,7 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="scan_cpu.h">
+    <ClInclude Include="boxfilter_cpu.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="timerCPP.h">
@@ -34,9 +34,9 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="scan_gpu.cuh" />
+    <None Include="boxfilter_gpu.cuh" />
   </ItemGroup>
   <ItemGroup>
-    <CudaCompile Include="scan_gpu.cu" />
+    <CudaCompile Include="boxfilter_gpu.cu" />
   </ItemGroup>
 </Project>
