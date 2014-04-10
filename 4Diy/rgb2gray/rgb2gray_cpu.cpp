@@ -5,15 +5,29 @@
 using namespace std;
 
 #define  PRINTMAX   1024
+#define		R_RATIO	0.299f
+#define		G_RATIO	0.587f
+#define		B_RATIO	0.114f
 
-void rgb2gray_cpu1( float* arrayA, float* arrayB, float* arrayC, int size )
+void rgb2gray_cpu1( float* rgb, float* gray, int size )
 {
 	for (int i=0;i<size;i++)
 	{
-		arrayC[i] = 
-			arrayA[3*i]*arrayB[3*i] + 
-			arrayA[3*i+1]*arrayB[3*i+1] + 
-			arrayA[3*i+1]*arrayB[3*i+1];
+		gray[i] = 
+			rgb[3*i]*  R_RATIO + 
+			rgb[3*i+1]* G_RATIO + 
+			rgb[3*i+2]* B_RATIO ;
+	}
+}
+
+void rgb2gray_cpu2( float* rgb, float* gray, int size )
+{
+	for (int i=0;i<size;i++)
+	{
+		gray[i] = 
+			rgb[i]*  R_RATIO + 
+			rgb[i+1*size]* G_RATIO + 
+			rgb[i+2*size]* B_RATIO ;
 	}
 }
 
@@ -21,7 +35,7 @@ void setArray( float* array, int size )
 {
 	for ( int i=0;i<size; i++)
 	{
-		array[i] = 1;
+		array[i] = i%256;
 	}
 }
 

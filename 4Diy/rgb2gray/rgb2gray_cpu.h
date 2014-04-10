@@ -10,7 +10,9 @@ struct Point3
 };
 #endif
 
-void rgb2gray_cpu1( float* arrayA, float* arrayB, float* arrayC, int size );
+void rgb2gray_cpu1( float* rgb, float* gray, int size );
+
+void rgb2gray_cpu2( float* rgb, float* gray, int size );
 
 void setArray( float* array, int size );
 
