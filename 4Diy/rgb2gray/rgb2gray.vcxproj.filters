@@ -21,10 +21,10 @@
     <ClCompile Include="timerCUDA.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="vectorDot.cpp">
+    <ClCompile Include="rgb2gray.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="vectorDot_cpu.cpp">
+    <ClCompile Include="rgb2gray_cpu.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
@@ -35,14 +35,14 @@
     <ClInclude Include="timerCUDA.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="vectorDot_cpu.h">
+    <ClInclude Include="rgb2gray_cpu.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="vectorDot_gpu.cuh" />
+    <None Include="rgb2gray_gpu.cuh" />
   </ItemGroup>
   <ItemGroup>
-    <CudaCompile Include="vectorDot_gpu.cu" />
+    <CudaCompile Include="rgb2gray_gpu.cu" />
   </ItemGroup>
 </Project>

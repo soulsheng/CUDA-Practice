@@ -13,7 +13,7 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{2A7FDF30-A11C-4B12-A6C8-6D7228212ABB}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>vectorDot</RootNamespace>
+    <RootNamespace>rgb2gray</RootNamespace>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -77,21 +77,21 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="vectorDot.cpp" />
-    <ClCompile Include="vectorDot_cpu.cpp" />
+    <ClCompile Include="rgb2gray.cpp" />
+    <ClCompile Include="rgb2gray_cpu.cpp" />
     <ClCompile Include="timerCPP.cpp" />
     <ClCompile Include="timerCUDA.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="vectorDot_cpu.h" />
+    <ClInclude Include="rgb2gray_cpu.h" />
     <ClInclude Include="timerCPP.h" />
     <ClInclude Include="timerCUDA.h" />
   </ItemGroup>
   <ItemGroup>
-    <CudaCompile Include="vectorDot_gpu.cu">
+    <CudaCompile Include="rgb2gray_gpu.cu">
       <FileType>Document</FileType>
     </CudaCompile>
-    <None Include="vectorDot_gpu.cuh" />
+    <None Include="rgb2gray_gpu.cuh" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
