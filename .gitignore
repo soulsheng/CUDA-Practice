@@ -48,3 +48,8 @@
 /4Diy/scan/Release
 /4Diy/scan/Debug
 /4Diy/scan/*.user
+/4diy/Debug
+/4diy/Release
+/4diy/*.sdf
+/4diy/*.suo
+/4diy/ipch
