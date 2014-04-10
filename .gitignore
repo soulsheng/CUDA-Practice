@@ -53,3 +53,7 @@
 /4diy/*.sdf
 /4diy/*.suo
 /4diy/ipch
+/4Diy/boxfilter/Debug
+/4Diy/boxfilter/Release
+/4Diy/boxfilter/*.user
+/4Diy/boxfilter/*.pdb
