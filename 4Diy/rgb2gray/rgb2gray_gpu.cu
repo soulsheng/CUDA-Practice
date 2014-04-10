@@ -5,6 +5,40 @@
 
 #include "defineMacro.h"
 
+
+__global__ void rgb2gray_kernel3( ColorRGB* rgb, float* gray, int size )
+{
+	int index = blockIdx.x*blockDim.x + threadIdx.x;
+
+	if(  index > size )
+		return;
+	ColorRGB color = rgb[index];
+	gray[ index ] = 
+		color.x * R_RATIO 
+	+	color.y * G_RATIO 
+	+	color.z * B_RATIO  ;
+}
+
+void rgb2gray_gpu3( float* rgb, float* gray, int size )
+{
+	float* d_arrayA ;
+	cudaMalloc( (void**)&d_arrayA, sizeof(float)*size*3 );
+	cudaMemcpy( d_arrayA, rgb, sizeof(float)*size*3, cudaMemcpyHostToDevice );
+
+	float* d_arrayC ;
+	cudaMalloc( (void**)&d_arrayC, sizeof(float)*size );
+
+	int sizeBlock = size>BLOCKDIM?BLOCKDIM: size;
+	int countBlock = (size+ sizeBlock-1)/sizeBlock;
+	rgb2gray_kernel3<<< countBlock, sizeBlock >>>(  (ColorRGB*)d_arrayA,  d_arrayC, size );
+
+	cudaMemcpy( gray, d_arrayC, sizeof(float)*size, cudaMemcpyDeviceToHost );
+
+	cudaFree( d_arrayA );
+	cudaFree( d_arrayC );
+
+}
+
 __global__ void rgb2gray_kernel2( float* rgb, float* gray, int size )
 {
 	int index = blockIdx.x*blockDim.x + threadIdx.x;

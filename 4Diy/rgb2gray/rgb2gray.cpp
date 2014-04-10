@@ -77,19 +77,18 @@ void main()
 	cout << "rgb2gray_gpu °æ±¾2£ºsoa(struct of array)" << ", timer: " << timerGPU.getTime()/REPEAT <<endl;
 	printArray( gray, N );
 
-#if 0
 	
 	//--GPU °æ±¾3£ºshared----------	
 	timerGPU.start();
 	for(int i=0;i<REPEAT;i++)
 	{
-		setArray( a, N );
-		result = rgb2gray_gpu2( a,  b, N );
+		setArray( rgb, N*3 );
+		rgb2gray_gpu3( rgb, gray, N );
 	}
 	timerGPU.stop();
 
 	cout << "rgb2gray_gpu °æ±¾3£ºshared " << result << ", timer: " << timerGPU.getTime()/REPEAT <<endl;
-	printArray( a, N );
-#endif
+	printArray( gray, N );
+
 	free( rgb ); free( gray );
 }
