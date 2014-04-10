@@ -10,7 +10,8 @@ using namespace std;
 #define HEIGHT	(1<<10)
 
 #define N (WIDTH*HEIGHT)
-#define REPEAT   10
+#define REPEAT		10
+#define RADIUS		20
 
 void main()
 {
@@ -32,7 +33,7 @@ void main()
 	for(int i=0;i<REPEAT;i++)
 	{
 		setArray( a, N );
-		result = boxfilter_cpu1( a, N, WIDTH );
+		result = boxfilter_cpu1( a, N, WIDTH, RADIUS );
 	}
 	timer.stop();
 
