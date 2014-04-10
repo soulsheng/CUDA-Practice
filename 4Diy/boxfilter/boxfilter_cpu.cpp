@@ -1,12 +1,12 @@
 
-#include "scan_cpu.h"
+#include "boxfilter_cpu.h"
 
 #include <iostream>
 using namespace std;
 
 #define  PRINTMAX   1024
 
-float scan_cpu2( float* array, int size, int width )
+float boxfilter_cpu2( float* array, int size, int width )
 {
 	float* temp = (float*)malloc( size* sizeof(float) );
 	temp[0] = array[0];
@@ -46,13 +46,14 @@ float scan_cpu2( float* array, int size, int width )
 	return result;
 }
 
-float scan_cpu1( float* array, int size, int width )
+float boxfilter_cpu1( float* array, int size, int width )
 {
 	float result = 0;
-	for (int i=1;i<size;i++)
-	{
-		array[i] += array[i-1];
-	}
+	for (int row=0;row<size/width;row++)
+		for (int i=1;i<width;i++)
+		{
+			array[i+row*width] += array[i-1+row*width];
+		}
 
 	return array[size-1];
 }

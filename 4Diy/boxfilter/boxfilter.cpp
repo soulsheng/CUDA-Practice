@@ -1,13 +1,13 @@
 
-#include "scan_cpu.h"
-#include "scan_gpu.cuh"
+#include "boxfilter_cpu.h"
+#include "boxfilter_gpu.cuh"
 #include "timerCPP.h"
 
 #include <iostream>
 using namespace std;
 
-#define WIDTH	(1<<9)
-#define HEIGHT	(1<<1)
+#define WIDTH	(1<<10)
+#define HEIGHT	(1<<10)
 
 #define N (WIDTH*HEIGHT)
 #define REPEAT   10
@@ -32,11 +32,11 @@ void main()
 	for(int i=0;i<REPEAT;i++)
 	{
 		setArray( a, N );
-		result = scan_cpu1( a, N, WIDTH );
+		result = boxfilter_cpu1( a, N, WIDTH );
 	}
 	timer.stop();
 
-	cout << "scan_cpu 版本：直接累加" << result << ", timer: " << timer.getTime()/REPEAT << endl;
+	cout << "boxfilter_cpu 版本：直接累加" << result << ", timer: " << timer.getTime()/REPEAT << endl;
 	printArray( a, N, WIDTH );
 
 	setArray( a, N );
@@ -47,11 +47,11 @@ void main()
 	for(int i=0;i<REPEAT;i++)
 	{
 		setArray( a, N );
-		result = scan_gpu1( a, N, WIDTH );
+		result = boxfilter_gpu1( a, N, WIDTH );
 	}
 	timerGPU.stop();
 
-	cout << "scan_gpu 版本1：行串行 " << result << ", timer: " << timerGPU.getTime()/REPEAT <<endl;
+	cout << "boxfilter_gpu 版本1：行串行 " << result << ", timer: " << timerGPU.getTime()/REPEAT <<endl;
 	printArray( a, N, WIDTH );
 
 	//--GPU 版本2：shared----------	
@@ -59,11 +59,11 @@ void main()
 	for(int i=0;i<REPEAT;i++)
 	{
 		setArray( a, N );
-		result = scan_gpu2( a, N, WIDTH );
+		result = boxfilter_gpu2( a, N, WIDTH );
 	}
 	timerGPU.stop();
 
-	cout << "scan_gpu 版本2：shared " << result << ", timer: " << timerGPU.getTime()/REPEAT <<endl;
+	cout << "boxfilter_gpu 版本2：shared " << result << ", timer: " << timerGPU.getTime()/REPEAT <<endl;
 	printArray( a, N, WIDTH );
 
 	free( a );

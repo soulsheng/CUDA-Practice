@@ -1,33 +1,29 @@
 
-#include "scan_cpu.h"
+#include "boxfilter_cpu.h"
 
 #include <cuda_runtime.h>
 
 #define  BLOCKDIM_MAX	(1<<10)
 
-__global__ void scan_kernel1( float* array, int size, int width )
+__global__ void boxfilter_kernel1( float* array, int size, int width )
 {
-	int row = threadIdx.x;
-
-	int WIDTH = size/BLOCKDIM_MAX ;
-
-	for (int i=1;i<WIDTH;i++)
+	for (int i=1;i<width;i++)
 	{
-		array[i + row*WIDTH] += array[i-1 + row*WIDTH];
+		array[i + threadIdx.x*width] += array[i-1 + threadIdx.x*width];
 	}
 
 }
 
-float scan_gpu1( float* array, int size, int width )
+float boxfilter_gpu1( float* array, int size, int width )
 {
 	float* d_array ;
 	cudaMalloc( (void**)&d_array, sizeof(float)*size );
 
 	cudaMemcpy( d_array, array, sizeof(float)*size, cudaMemcpyHostToDevice );
 
-	int sizeBlock = size/BLOCKDIM_MAX > BLOCKDIM_MAX?BLOCKDIM_MAX: size/BLOCKDIM_MAX;
+	int sizeBlock = size/width > BLOCKDIM_MAX?BLOCKDIM_MAX: size/width;
 	int countBlock = 1;
-	scan_kernel1<<< 1, sizeBlock >>>( d_array, size, width );
+	boxfilter_kernel1<<< 1, sizeBlock >>>( d_array, size, width );
 
 	cudaMemcpy( array, d_array, sizeof(float)*size, cudaMemcpyDeviceToHost );
 
@@ -36,7 +32,7 @@ float scan_gpu1( float* array, int size, int width )
 	return array[size-1];
 }
 
-__global__ void scan_kernel2( float* array, int size, int width )
+__global__ void boxfilter_kernel2( float* array, int size, int width )
 {
 	int index = blockIdx.x * width + threadIdx.x;
 
@@ -63,7 +59,7 @@ __global__ void scan_kernel2( float* array, int size, int width )
 	__syncthreads();
 }
 
-float scan_gpu2( float* array, int size, int width )
+float boxfilter_gpu2( float* array, int size, int width )
 {
 	float* d_array ;
 	cudaMalloc( (void**)&d_array, sizeof(float)*size );
@@ -72,7 +68,7 @@ float scan_gpu2( float* array, int size, int width )
 
 	int sizeBlock = width>BLOCKDIM_MAX?BLOCKDIM_MAX: width;
 	int countBlock = size / width ;// 行数，一个block处理一行
-	scan_kernel2<<< countBlock, sizeBlock >>>( d_array, size, width );
+	boxfilter_kernel2<<< countBlock, sizeBlock >>>( d_array, size, width );
 
 	cudaMemcpy( array, d_array, sizeof(float)*size, cudaMemcpyDeviceToHost );
 
@@ -83,5 +79,5 @@ float scan_gpu2( float* array, int size, int width )
 
 void warnup_gpu( float* array, int size, int width )
 {
-	scan_gpu2( array, size, width );
+	boxfilter_gpu2( array, size, width );
 }
