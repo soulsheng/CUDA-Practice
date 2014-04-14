@@ -37,7 +37,7 @@ void main()
 	}
 	timer.stop();
 
-	cout << "boxfilter_cpu 版本：直接累加" << result << ", timer: " << timer.getTime()/REPEAT << endl;
+	cout << "boxfilter_cpu 版本：直接累加" << result << ", timer: " << timer.getTime()/REPEAT << endl << endl;
 	printArray( a, N, WIDTH );
 
 	setArray( a, N );
@@ -52,7 +52,10 @@ void main()
 	}
 	timerGPU.stop();
 
-	cout << "boxfilter_gpu 版本1：行串行 " << ", kernel timer: " << result << ", GPU timer: " << timerGPU.getTime()/REPEAT <<endl;
+	cout << "boxfilter_gpu 版本1：行串行 " <<endl
+		<< "kernel timer: " << result  <<endl
+		<< "Memory timer: " << timerGPU.getTime()/REPEAT - result  <<endl
+		<< "GPU timer: " 	<< timerGPU.getTime()/REPEAT <<endl<<endl;
 	printArray( a, N, WIDTH );
 
 	//--GPU 版本2：shared----------	
@@ -64,7 +67,10 @@ void main()
 	}
 	timerGPU.stop();
 
-	cout << "boxfilter_gpu 版本2：shared " << ", kernel timer: " << result << ", GPU timer: " << timerGPU.getTime()/REPEAT <<endl;
+	cout << "boxfilter_gpu 版本2：shared " <<endl
+		<< "kernel timer: " << result  <<endl
+		<< "Memory timer: " << timerGPU.getTime()/REPEAT - result  <<endl
+		<< "GPU timer: " 	<< timerGPU.getTime()/REPEAT <<endl<<endl;
 	printArray( a, N, WIDTH );
 
 	free( a );
