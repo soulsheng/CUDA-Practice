@@ -50,6 +50,10 @@ float boxfilter_gpu1s( float* array, int size, int width, int r )
 	timer.start();
 
 	boxfilter_kernel_accumulate1s<<< countBlock, sizeBlock >>>( d_array, d_arrayTemp, size, width, r );
+	
+	cudaError_t err = cudaGetLastError();
+	if( err != cudaSuccess )
+		cout << cudaGetErrorString( err ) << endl;
 
 	timer.stop();
 
@@ -104,6 +108,10 @@ float boxfilter_gpu1p( float* array, int size, int width, int r )
 	timer.start();
 
 	boxfilter_kernel_accumulate1p<<< countBlock, sizeBlock >>>( d_array, d_arrayTemp, size, width, r );
+	
+	cudaError_t err = cudaGetLastError();
+	if( err != cudaSuccess )
+		cout << cudaGetErrorString( err ) << endl;
 
 	timer.stop();
 
@@ -169,6 +177,11 @@ float boxfilter_gpu2s( float* array, int size, int width, int r )
 
 	// 第一步，扫描累加
 	boxfilter_kernel_scan2s<<< countBlock, sizeBlock >>>( d_array, size, width );
+
+	cudaError_t err = cudaGetLastError();
+	if( err != cudaSuccess )
+		cout << cudaGetErrorString( err ) << endl;
+
 #if 1
 	// 第二步，等间隔相减
 	float* d_arrayBackup ;
@@ -176,6 +189,11 @@ float boxfilter_gpu2s( float* array, int size, int width, int r )
 	cudaMemcpy( d_arrayBackup, d_array, sizeof(float)*size, cudaMemcpyDeviceToDevice );
 	boxfilter_kernel_delta2s<<< 1, sizeBlock >>>( d_array, d_arrayBackup, size, width, r );
 #endif
+	
+	err = cudaGetLastError();
+	if( err != cudaSuccess )
+		cout << cudaGetErrorString( err ) << endl;
+
 	timer.stop();
 
 	cudaMemcpy( array, d_array, sizeof(float)*size, cudaMemcpyDeviceToHost );
@@ -241,6 +259,10 @@ float boxfilter_gpu2p( float* array, int size, int width, int r )
 	int countBlock = size / width ;// 行数，一个block处理一行
 	boxfilter_kernel2p<<< countBlock, sizeBlock >>>( d_array, size, width, r );
 	timer.stop();
+	
+	cudaError_t err = cudaGetLastError();
+	if( err != cudaSuccess )
+		cout << cudaGetErrorString( err ) << endl;
 
 	cudaMemcpy( array, d_array, sizeof(float)*size, cudaMemcpyDeviceToHost );
 
