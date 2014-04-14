@@ -1,7 +1,11 @@
 
 #include "boxfilter_cpu.h"
+#include "timerCUDA.h"
 
 #include <cuda_runtime.h>
+
+#include <iostream>
+using namespace std;
 
 #define  BLOCKDIM_MAX	(1<<10)
 
@@ -54,6 +58,9 @@ float boxfilter_gpu1( float* array, int size, int width, int r )
 	int sizeBlock = size/width > BLOCKDIM_MAX?BLOCKDIM_MAX: size/width;
 	int countBlock = 1;
 
+	timerCUDA timer;
+	timer.start();
+
 	// 第一步，扫描累加
 	boxfilter_kernel_scan1<<< 1, sizeBlock >>>( d_array, size, width );
 #if 1
@@ -63,11 +70,13 @@ float boxfilter_gpu1( float* array, int size, int width, int r )
 	cudaMemcpy( d_arrayBackup, d_array, sizeof(float)*size, cudaMemcpyDeviceToDevice );
 	boxfilter_kernel_delta1<<< 1, sizeBlock >>>( d_array, d_arrayBackup, size, width, r );
 #endif
+	timer.stop();
+
 	cudaMemcpy( array, d_array, sizeof(float)*size, cudaMemcpyDeviceToHost );
 
 	cudaFree( d_array );
 
-	return array[size-1];
+	return timer.getTime();
 }
 
 __global__ void boxfilter_kernel2( float* array, int size, int width, int r )
@@ -120,15 +129,18 @@ float boxfilter_gpu2( float* array, int size, int width, int r )
 
 	cudaMemcpy( d_array, array, sizeof(float)*size, cudaMemcpyHostToDevice );
 
+	timerCUDA timer;
+	timer.start();
 	int sizeBlock = width>BLOCKDIM_MAX?BLOCKDIM_MAX: width;
 	int countBlock = size / width ;// 行数，一个block处理一行
 	boxfilter_kernel2<<< countBlock, sizeBlock >>>( d_array, size, width, r );
+	timer.stop();
 
 	cudaMemcpy( array, d_array, sizeof(float)*size, cudaMemcpyDeviceToHost );
 
 	cudaFree( d_array );
 
-	return array[size-1];
+	return timer.getTime();
 }
 
 void warnup_gpu( float* array, int size, int width, int r )
