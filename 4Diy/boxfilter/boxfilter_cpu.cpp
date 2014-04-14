@@ -6,47 +6,39 @@ using namespace std;
 
 #define  PRINTMAX   1024
 
-float boxfilter_cpu2( float* array, int size, int width )
+float boxfilter_cpu1( float* array, int size, int width, int r )
 {
 	float* temp = (float*)malloc( size* sizeof(float) );
-	temp[0] = array[0];
-	float* pSrc = NULL;
-	float* pDst = NULL;
+	memcpy( temp, array, size * sizeof(float) );
+	memset( array, 0, size * sizeof(float) );
 
-	float result = 0;
-	for ( int d=1, round=0;d<=size/2; d+=d, round++ )
+	for (int row=0;row<size/width;row++)
 	{
-		if ( round%2 )
+		for (int i=0;i<width;i++)
 		{
-			pSrc = temp;
-			pDst = array;
+			if(i-r>=0 && i+r<=width-1)
+			{
+				for(int j=i-r;j<=i+r;j++)
+					array[i+row*width] += temp[row*width+j];
+			}
+			else if(i-r<0)
+			{
+				for(int j=0;j<=i+r;j++)
+					array[i+row*width] += temp[row*width+j];
+			}
+			else
+			{
+				for(int j=i-r;j<=width-1;j++)
+					array[i+row*width] += temp[row*width+j];
+			}
 		}
-		else
-		{
-			pSrc = array;
-			pDst = temp;
-		}
-
-		for ( int i=d;i< size; i++ )
-		{
-			pDst[i] = pSrc[i] + pSrc[i-d];
-		}
-
-		for( int i=0;i<d;i++)
-			pDst[i] = pSrc[i];
-	}
-	
-	if (pDst!=array)
-	{
-		memcpy( array, pDst, size * sizeof(float) );
 	}
 
-	result = pDst[size-1];
 	free(temp);
-	return result;
+	return array[size-1];
 }
 
-float boxfilter_cpu1( float* array, int size, int width, int r )
+float boxfilter_cpu2( float* array, int size, int width, int r )
 {
 	float result = 0;
 

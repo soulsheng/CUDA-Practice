@@ -28,7 +28,7 @@ void main()
 
 	float result = 0;
 	
-	//--CPU 版本：直接累加----------	
+	//--CPU 版本1：直接累加----------	
 	timer.start();
 	for(int i=0;i<REPEAT;i++)
 	{
@@ -37,7 +37,19 @@ void main()
 	}
 	timer.stop();
 
-	cout << "boxfilter_cpu 版本：直接累加" << result << ", timer: " << timer.getTime()/REPEAT << endl << endl;
+	cout << "boxfilter_cpu1 版本：直接累加" << ", timer: " << timer.getTime()/REPEAT << endl << endl;
+	printArray( a, N, WIDTH );
+
+	//--CPU 版本2：scan再相减----------	
+	timer.start();
+	for(int i=0;i<REPEAT;i++)
+	{
+		setArray( a, N );
+		result = boxfilter_cpu2( a, N, WIDTH, RADIUS );
+	}
+	timer.stop();
+
+	cout << "boxfilter_cpu 版本2：scan再相减" << ", timer: " << timer.getTime()/REPEAT << endl << endl;
 	printArray( a, N, WIDTH );
 
 	setArray( a, N );

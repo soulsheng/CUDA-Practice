@@ -1,6 +1,6 @@
 
 
-float boxfilter_cpu2( float* array, int size, int width );
+float boxfilter_cpu2( float* array, int size, int width, int r=1 );
 
 float boxfilter_cpu1( float* array, int size, int width, int r=1 );
 
