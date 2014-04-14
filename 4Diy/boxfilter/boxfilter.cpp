@@ -7,7 +7,7 @@
 using namespace std;
 
 #define WIDTH	(1<<10)
-#define HEIGHT	(1<<10)
+#define HEIGHT	(1<<12)
 
 #define N (WIDTH*HEIGHT)
 #define REPEAT		10
