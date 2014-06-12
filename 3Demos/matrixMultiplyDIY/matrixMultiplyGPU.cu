@@ -6,7 +6,7 @@
 using namespace std;
 
 #include "matrixMultiplyGPU.cuh"
-#include "timerCPP.h"
+#include "timerTest.h"
 
 #define  TILE 16
 

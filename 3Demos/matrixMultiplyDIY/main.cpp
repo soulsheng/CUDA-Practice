@@ -2,10 +2,10 @@
 using namespace std;
 #include "stdio.h"
 
-#include "timerCPP.h"
+#include "timerTest.h"
 #include "matrixMultiplyCPU.h"
 #include "matrixMultiplyGPU.cuh"
-//#include "timerCUDA.h"
+
 
 #define  MATRIX_WIDTH	512
 

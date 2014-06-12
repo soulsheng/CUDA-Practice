@@ -1,5 +1,5 @@
 
-#include "timerCPP.h"
+#include "timerTest.h"
 #include <cuda_runtime.h>
 
 	timerTest::timerTest()

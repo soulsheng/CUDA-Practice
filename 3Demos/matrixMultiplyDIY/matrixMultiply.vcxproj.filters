@@ -17,22 +17,16 @@
     <ClCompile Include="matrixMultiplyCPU.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="timerCPP.cpp">
-      <Filter>timer</Filter>
-    </ClCompile>
-    <ClCompile Include="timerCUDA.cpp">
-      <Filter>timer</Filter>
-    </ClCompile>
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="timerTest.cpp">
+      <Filter>timer</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="matrixMultiplyCPU.h">
       <Filter>include</Filter>
     </ClInclude>
-    <ClInclude Include="timerCPP.h">
-      <Filter>timer</Filter>
-    </ClInclude>
-    <ClInclude Include="timerCUDA.h">
+    <ClInclude Include="timerTest.h">
       <Filter>timer</Filter>
     </ClInclude>
   </ItemGroup>

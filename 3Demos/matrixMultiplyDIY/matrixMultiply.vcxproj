@@ -85,13 +85,11 @@
   <ItemGroup>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="matrixMultiplyCPU.cpp" />
-    <ClCompile Include="timerCPP.cpp" />
-    <ClCompile Include="timerCUDA.cpp" />
+    <ClCompile Include="timerTest.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="matrixMultiplyCPU.h" />
-    <ClInclude Include="timerCPP.h" />
-    <ClInclude Include="timerCUDA.h" />
+    <ClInclude Include="timerTest.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="matrixMultiplyGPU.cuh" />
