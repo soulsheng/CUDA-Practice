@@ -1,11 +1,12 @@
 
 #include <cuda_runtime.h>
+#include <cublas_v2.h>
 
 #include <iostream>
 using namespace std;
 
 #include "matrixMultiplyGPU.cuh"
-#include "timerCUDA.h"
+#include "timerCPP.h"
 
 #define  TILE 16
 
@@ -151,7 +152,7 @@ void matrixMulGPU1( float* a, float*b, float*c, int n, bool bTimeKernel )
 	dim3 sizeBlock(nBlock, nBlock);
 	dim3 sizeGrid( nGrid, nGrid );
 	
-	timerCUDA	timerGPU;
+	timerTestCU	timerGPU;
 	if( bTimeKernel )
 		timerGPU.start();
 
@@ -191,7 +192,7 @@ void matrixMulGPU2( float* a, float*b, float*c, int n, bool bTimeKernel )
 	dim3 sizeBlock(nBlock, nBlock);
 	dim3 sizeGrid( nGrid, nGrid );
 
-	timerCUDA	timerGPU;
+	timerTestCU	timerGPU;
 	if( bTimeKernel )
 		timerGPU.start();
 
@@ -231,11 +232,72 @@ void matrixMulGPU3( float* a, float*b, float*c, int n, bool bTimeKernel )
 	dim3 sizeBlock(nBlock, nBlock);
 	dim3 sizeGrid( nGrid, nGrid );
 
-	timerCUDA	timerGPU;
+	timerTestCU	timerGPU;
 	if( bTimeKernel )
 		timerGPU.start();
 
 	kernelMatrixMul3<16><<< sizeGrid,sizeBlock >>>( aDev, bDev, cDev, n, n );
+	cudaError_t err = cudaGetLastError();
+
+	if( err != cudaSuccess )
+		cout << "error" << endl;
+
+	if( bTimeKernel )
+	{
+		timerGPU.stop();
+		cout << "Kernel time : " << timerGPU.getTime() << endl;
+	}
+
+	cudaMemcpy( c, cDev, n*n*sizeof(float), cudaMemcpyDeviceToHost );
+
+	cudaFree( aDev );
+	cudaFree( bDev );
+	cudaFree( cDev );
+}
+
+// GPU °æ±¾4£¬cuda BLAS
+void matrixMulGPU4( float* a, float*b, float*c, int n, bool bTimeKernel )
+{
+	float *aDev,*bDev,*cDev;
+	cudaMalloc( (void**)&aDev, n*n*sizeof(float) );
+	cudaMalloc( (void**)&bDev, n*n*sizeof(float) );
+	cudaMalloc( (void**)&cDev, n*n*sizeof(float) );
+
+	cudaMemcpy( aDev, a, n*n*sizeof(float), cudaMemcpyHostToDevice );
+	cudaMemcpy( bDev, b, n*n*sizeof(float), cudaMemcpyHostToDevice );
+	cudaMemset( cDev, 0, n*n*sizeof(float) );
+
+	int nBlock = 16;
+	int nGrid = (n + nBlock-1)/nBlock;
+	dim3 sizeBlock(nBlock, nBlock);
+	dim3 sizeGrid( nGrid, nGrid );
+
+	timerTestCU	timerGPU;
+	if( bTimeKernel )
+		timerGPU.start();
+
+	//kernelMatrixMul3<16><<< sizeGrid,sizeBlock >>>( aDev, bDev, cDev, n, n );
+	{
+		cublasHandle_t handle;
+
+        cublasStatus_t ret;
+
+        ret = cublasCreate(&handle);
+
+		const float alpha = 1.0f;
+        const float beta  = 0.0f;
+
+		ret = cublasSgemm(handle, CUBLAS_OP_N, CUBLAS_OP_N, 
+			n, n, n, 
+			&alpha, 
+			bDev, n, 
+			aDev, n, 
+			&beta, 
+			cDev, n);
+
+		cublasDestroy(handle);
+	}
+
 	cudaError_t err = cudaGetLastError();
 
 	if( err != cudaSuccess )

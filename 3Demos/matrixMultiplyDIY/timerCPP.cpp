@@ -1,23 +1,30 @@
 
 #include "timerCPP.h"
+#include <cuda_runtime.h>
 
-	timerC::timerC()
+	timerTest::timerTest()
 	{
 		QueryPerformanceFrequency( &freq ) ;
 	}
 
-	void timerC::start()
+	void timerTest::start()
 	{
 		QueryPerformanceCounter( &tStart ) ;
 	}
 
-	void timerC::stop()
+	void timerTest::stop()
 	{
 		QueryPerformanceCounter( &tStop ) ;	
 	}
 
-	float timerC::getTime()
+	float timerTest::getTime()
 	{
 		differTime = (tStop.QuadPart - tStart.QuadPart)/(float)freq.QuadPart ;
 		return differTime*1000.0f ;
+	}
+
+	void timerTestCU::stop()
+	{
+		cudaDeviceSynchronize();
+		timerTest::stop();
 	}

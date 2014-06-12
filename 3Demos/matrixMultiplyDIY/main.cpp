@@ -5,7 +5,7 @@ using namespace std;
 #include "timerCPP.h"
 #include "matrixMultiplyCPU.h"
 #include "matrixMultiplyGPU.cuh"
-#include "timerCUDA.h"
+//#include "timerCUDA.h"
 
 #define  MATRIX_WIDTH	512
 
@@ -25,7 +25,7 @@ void printMatrix( float* m, int n )
 
 int main()
 {
-	timerC  timerCPU;
+	timerTestCU  timerCPU;
 
 	int nSize = MATRIX_WIDTH; 
 	float *aMatrix , *bMatrix, *cMatrix;
@@ -113,4 +113,16 @@ int main()
 	matrixMulGPU3( aMatrix, bMatrix, cMatrix, nSize, true );
 #endif
 
+
+#if 1
+	timerCPU.start();
+	// GPU °æ±¾4£¬cuda BLAS
+	cout << "\n" << "GPU °æ±¾4£¬cuda BLAS" << endl;
+	memset( cMatrix, 0, nSize*nSize*sizeof(float) );
+	matrixMulGPU4( aMatrix, bMatrix, cMatrix, nSize );
+	printMatrix( cMatrix, nSize );
+	timerCPU.stop();
+	cout << "Total time(ms) : " << timerCPU.getTime() << endl;
+	matrixMulGPU4( aMatrix, bMatrix, cMatrix, nSize, true );
+#endif
 }

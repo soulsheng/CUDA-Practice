@@ -10,3 +10,6 @@ void matrixMulGPU2( float* a, float*b, float*c, int n, bool bTimeKernel = false 
 
 // GPU °æ±¾3£¬block·Ö¿é£¬SDK
 void matrixMulGPU3( float* a, float*b, float*c, int n, bool bTimeKernel = false );
+
+// GPU °æ±¾4£¬cuda BLAS
+void matrixMulGPU4( float* a, float*b, float*c, int n, bool bTimeKernel = false );
