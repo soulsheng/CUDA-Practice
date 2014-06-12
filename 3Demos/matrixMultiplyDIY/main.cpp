@@ -49,7 +49,7 @@ int main()
 	matrixMul1( aMatrix, bMatrix, cMatrix, nSize );
 	printMatrix( cMatrix, nSize );
 	timerCPU.stop();
-	cout << timerCPU.getTime() << endl;
+	cout << "Total time(ms) : " << timerCPU.getTime() << endl;
 
 	timerCPU.start();
 	// CPU 版本2，block预备分块
@@ -58,7 +58,7 @@ int main()
 	matrixMul2( aMatrix, bMatrix, cMatrix, nSize );
 	printMatrix( cMatrix, nSize );
 	timerCPU.stop();
-	cout << timerCPU.getTime() << endl;
+	cout << "Total time(ms) : " << timerCPU.getTime() << endl;
 
 	timerCPU.start();
 	// CPU 版本3，block分块
@@ -67,7 +67,7 @@ int main()
 	matrixMul3( aMatrix, bMatrix, cMatrix, nSize );
 	printMatrix( cMatrix, nSize );
 	timerCPU.stop();
-	cout << timerCPU.getTime() << endl;
+	cout << "Total time(ms) : " << timerCPU.getTime() << endl;
 
 	// CUDA预热
 	cout << "\nCUDA预热" << endl;
@@ -84,7 +84,7 @@ int main()
 	matrixMulGPU1( aMatrix, bMatrix, cMatrix, nSize );
 	printMatrix( cMatrix, nSize );
 	timerCPU.stop();
-	cout << "Total time : " << timerCPU.getTime() << endl;
+	cout << "Total time(ms) : " << timerCPU.getTime() << endl;
 	matrixMulGPU1( aMatrix, bMatrix, cMatrix, nSize, true );
 #endif
 
@@ -96,7 +96,7 @@ int main()
 	matrixMulGPU2( aMatrix, bMatrix, cMatrix, nSize );
 	printMatrix( cMatrix, nSize );
 	timerCPU.stop();
-	cout << "Total time : " << timerCPU.getTime() << endl;
+	cout << "Total time(ms) : " << timerCPU.getTime() << endl;
 	matrixMulGPU2( aMatrix, bMatrix, cMatrix, nSize, true );
 #endif
 
@@ -109,7 +109,7 @@ int main()
 	matrixMulGPU3( aMatrix, bMatrix, cMatrix, nSize );
 	printMatrix( cMatrix, nSize );
 	timerCPU.stop();
-	cout << "Total time : " << timerCPU.getTime() << endl;
+	cout << "Total time(ms) : " << timerCPU.getTime() << endl;
 	matrixMulGPU3( aMatrix, bMatrix, cMatrix, nSize, true );
 #endif
 
