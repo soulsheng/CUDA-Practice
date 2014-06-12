@@ -69,49 +69,68 @@ __global__ void kernelMatrixMul2( float* a, float*b, float*c, int n )
 }
 
 // GPU 版本3，block分块，SDK
-__global__ void kernelMatrixMul3( float* a, float*b, float*c, int n )
+template <int BLOCK_SIZE> 
+__global__ void kernelMatrixMul3( float *A, float *B, float *C, int wA, int wB )
 {
 	
-	int blockIdy = blockIdx.y ;
-
-	int blockIdxx = blockIdx.x ;
+    // Block index
+	int bx = blockIdx.x ;
+	int by = blockIdx.y ;
 	
-	int threadIdy = threadIdx.y;
-	
-	int threadIdxx = threadIdx.x;
+    // Thread index
+	int tx = threadIdx.x;
+	int ty = threadIdx.y;
 
-	float cBlockOne = 0.0f;
 
-	int aBegin = blockIdy * TILE * n;
-	int aStep  = TILE;
-	int aEnd   = aBegin + n - 1;
-	int bBegin = blockIdxx* TILE;
-	int bStep  = TILE * n;
+    // Index of the first sub-matrix of A processed by the block
+	int aBegin = wA * BLOCK_SIZE * by ;
 
-	for(int aOffset=aBegin, bOffset=bBegin; aOffset<aEnd; aOffset+=aStep, bOffset+=bStep)
+    // Index of the last sub-matrix of A processed by the block
+	int aEnd   = aBegin + wA - 1;
+
+    // Step size used to iterate through the sub-matrices of A
+	int aStep  = BLOCK_SIZE;
+
+    // Index of the first sub-matrix of B processed by the block
+	int bBegin = BLOCK_SIZE * bx;
+
+    // Step size used to iterate through the sub-matrices of B
+	int bStep  = BLOCK_SIZE * wB;
+
+	// Csub is used to store the element of the block sub-matrix
+    // that is computed by the thread
+	float Csub = 0.0f;
+
+	for(int a = aBegin, b = bBegin; 
+		a <= aEnd; 
+		a += aStep, b += bStep)
 	{
 		// 第一步，分配小块空间
-		__shared__ float aBlock[TILE][TILE];
-		__shared__ float bBlock[TILE][TILE];
+		__shared__ float As[BLOCK_SIZE][BLOCK_SIZE];
+		__shared__ float Bs[BLOCK_SIZE][BLOCK_SIZE];
 
 		// 第三步，小块赋值
-		{
-			aBlock[threadIdy][threadIdxx] = a[ aOffset + threadIdy*n + threadIdxx ];
-			bBlock[threadIdy][threadIdxx] = b[ bOffset + threadIdy*n + threadIdxx ];
-		}
+		As[ty][tx] = A[ a + wA * ty+ tx ];
+		Bs[ty][tx] = B[ b + wB * ty+ tx ];
+		
 		__syncthreads();
 
 		// 第四步，小矩阵相乘		
-		for(int p=0;p<TILE;p++)
+#pragma unroll
+		for(int k = 0; k < BLOCK_SIZE; k++ )
 		{
-			cBlockOne += aBlock[threadIdy][p] * bBlock[p][threadIdxx];
+			Csub += As[ty][k] * Bs[k][tx];
 		}
-						
+		
+		// Synchronize to make sure that the preceding
+        // computation is done before loading two new
+        // sub-matrices of A and B in the next iteration
+        __syncthreads();
 	}
 
-	int cOffset =( blockIdy * n/TILE) * (TILE*TILE) + blockIdxx*TILE  ;
+	int c = wB * BLOCK_SIZE * by + BLOCK_SIZE * bx;
 	// 第五步，小矩阵相乘结果累加到大矩阵		
-	c[ cOffset + threadIdy*n + threadIdxx] = cBlockOne;
+	C[ c + wB * ty + tx] = Csub;
 
 }
 
@@ -216,7 +235,7 @@ void matrixMulGPU3( float* a, float*b, float*c, int n, bool bTimeKernel )
 	if( bTimeKernel )
 		timerGPU.start();
 
-	kernelMatrixMul3<<< sizeGrid,sizeBlock >>>( aDev, bDev, cDev, n );
+	kernelMatrixMul3<16><<< sizeGrid,sizeBlock >>>( aDev, bDev, cDev, n, n );
 	cudaError_t err = cudaGetLastError();
 
 	if( err != cudaSuccess )
