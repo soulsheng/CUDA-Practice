@@ -277,12 +277,13 @@ void matrixMulGPU4( float* a, float*b, float*c, int n, bool bTimeKernel )
 		timerGPU.start();
 
 	//kernelMatrixMul3<16><<< sizeGrid,sizeBlock >>>( aDev, bDev, cDev, n, n );
+	if(1)
 	{
 		cublasHandle_t handle;
 
         cublasStatus_t ret;
 
-        ret = cublasCreate(&handle);
+        ret = cublasCreate(&handle);	// ºÄÊ±>100ms
 
 		const float alpha = 1.0f;
         const float beta  = 0.0f;
