@@ -15,19 +15,19 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <CudaCompile Include="matrixmulGPU.cu" />
+    <CudaCompile Include="matrixMultiplyGPU.cu" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="matrixmulGPU.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="referCPP.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="timerCPP.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="timerCUDA.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="matrixMultiplyCPU.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
@@ -35,14 +35,14 @@
     <ClInclude Include="timerCPP.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="referCPP.h">
+    <ClInclude Include="timerCUDA.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="timerCUDA.h">
+    <ClInclude Include="matrixMultiplyCPU.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="matrixmulGPU.cuh" />
+    <None Include="matrixMultiplyGPU.cuh" />
   </ItemGroup>
 </Project>

@@ -61,3 +61,14 @@
 /4diy/rgb2gray/Debug
 /4diy/rgb2gray/*.pdb
 /4diy/rgb2gray/*.user
+/3Demos/Debug
+/3Demos/Release
+/3Demos/matrixMultiplyDIY/Debug
+/3Demos/matrixMultiplyDIY/Release
+/3Demos/matrixMultiplyDIY/ipch
+/3Demos/matrixMultiplyDIY/*.sdf
+/3Demos/matrixMultiplyDIY/*.suo
+/3Demos/matrixMultiplyDIY/*.user
+/3Demos/matrixMultiplyDIY/*.pdb
+/3Demos/*.suo
+/3Demos/matrixMultiplyDIY/*.opensdf

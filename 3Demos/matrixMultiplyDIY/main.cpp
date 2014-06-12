@@ -3,8 +3,8 @@ using namespace std;
 #include "stdio.h"
 
 #include "timerCPP.h"
-#include "referCPP.h"
-#include "matrixmulGPU.cuh"
+#include "matrixMultiplyCPU.h"
+#include "matrixMultiplyGPU.cuh"
 #include "timerCUDA.h"
 
 void printMatrix( float* m, int n )

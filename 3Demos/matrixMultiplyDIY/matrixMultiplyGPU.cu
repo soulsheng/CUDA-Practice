@@ -4,7 +4,7 @@
 #include <iostream>
 using namespace std;
 
-#include "matrixmulGPU.cuh"
+#include "matrixMultiplyGPU.cuh"
 #include "timerCUDA.h"
 
 #define  TILE 16

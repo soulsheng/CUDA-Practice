@@ -1,5 +1,5 @@
 
-#include "referCPP.h"
+#include "matrixMultiplyCPU.h"
 
 void matrixMul1( float* a, float*b, float*c, int n )
 {
