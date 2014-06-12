@@ -78,23 +78,23 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <CudaCompile Include="matrixmulGPU.cu">
+    <CudaCompile Include="matrixMultiplyGPU.cu">
       <FileType>CudaCompile</FileType>
     </CudaCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="matrixmulGPU.cpp" />
-    <ClCompile Include="referCPP.cpp" />
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="matrixMultiplyCPU.cpp" />
     <ClCompile Include="timerCPP.cpp" />
     <ClCompile Include="timerCUDA.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="referCPP.h" />
+    <ClInclude Include="matrixMultiplyCPU.h" />
     <ClInclude Include="timerCPP.h" />
     <ClInclude Include="timerCUDA.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="matrixmulGPU.cuh" />
+    <None Include="matrixMultiplyGPU.cuh" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
