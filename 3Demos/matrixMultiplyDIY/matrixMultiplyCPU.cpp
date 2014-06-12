@@ -1,9 +1,20 @@
 
 #include "matrixMultiplyCPU.h"
 
+// CPU 版本1，初始
 void matrixMul1( float* a, float*b, float*c, int n )
 {
 	for(int y=0; y<n; y++)
+		for(int x=0;x<n;x++)
+			for(int k=0;k<n;k++)
+				c[ y*n +x] += a[ y*n + k] * b[ k*n +x] ;
+}
+
+// CPU 版本2，block预备分块
+void matrixMul2( float* a, float*b, float*c, int n )
+{
+	for(int y=0; y<n; y++)
+	{
 		for(int x=0;x<n;x++)
 		{
 			for(int k=0;k<n;k++)
@@ -30,21 +41,11 @@ void matrixMul1( float* a, float*b, float*c, int n )
 				c[ y*n +x] += cBlockOne ;
 			}
 		}
-}
-
-void matrixMul2( float* a, float*b, float*c, int n )
-{
-	for(int ii=0; ii<n*n; ii++)
-	{
-		int i= ii / n ;
-		int j= ii %n;
-
-			for(int k=0;k<n;k++)
-				c[ i*n +j] += a[ i*n + k] * b[ k*n +j] ;
 	}
 }
 
 #define  TILE 16
+// CPU 版本3，block分块
 void matrixMul3( float* a, float*b, float*c, int n )
 {
 
@@ -66,25 +67,33 @@ void matrixMul3( float* a, float*b, float*c, int n )
 
 				// 第三步，小块赋值
 				for(int threadIdy=0;threadIdy<TILE;threadIdy++)
+				{
 					for(int threadIdx=0;threadIdx<TILE;threadIdx++)
-						{
-							aBlock[threadIdy][threadIdx] = a[ aOffset + threadIdy*n + threadIdx ];
-							bBlock[threadIdy][threadIdx] = b[ bOffset + threadIdy*n + threadIdx ];
-							cBlockOne[threadIdy][threadIdx] = 0.0f ;
-						}
+					{
+						aBlock[threadIdy][threadIdx] = a[ aOffset + threadIdy*n + threadIdx ];
+						bBlock[threadIdy][threadIdx] = b[ bOffset + threadIdy*n + threadIdx ];
+						cBlockOne[threadIdy][threadIdx] = 0.0f ;
+					}
+				}
 
 				// 第四步，小矩阵相乘
 				for(int threadIdy=0;threadIdy<TILE;threadIdy++)
+				{
 					for(int threadIdx=0;threadIdx<TILE;threadIdx++)
-						for(int p=0;p<TILE;p++)
 					{
-						cBlockOne[threadIdy][threadIdx] += aBlock[threadIdy][p] * bBlock[p][threadIdx];
+						for(int p=0;p<TILE;p++)
+						{
+							cBlockOne[threadIdy][threadIdx] += aBlock[threadIdy][p] * bBlock[p][threadIdx];
+						}
 					}
+				}
 			
 				// 第五步，小矩阵相乘结果累加到大矩阵
 				for(int threadIdy=0;threadIdy<TILE;threadIdy++)
+				{
 					for(int threadIdx=0;threadIdx<TILE;threadIdx++)
 						c[ cOffset + threadIdy*n + threadIdx] += cBlockOne[threadIdy][threadIdx];
+				}
 			}
 		}
 	}

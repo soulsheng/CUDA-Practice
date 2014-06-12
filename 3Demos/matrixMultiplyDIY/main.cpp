@@ -7,9 +7,12 @@ using namespace std;
 #include "matrixMultiplyGPU.cuh"
 #include "timerCUDA.h"
 
+#define  MATRIX_WIDTH	512
+
 void printMatrix( float* m, int n )
 {
-	return;
+	if( n>16 )	return;
+	// 尺寸小于16*16时，输出矩阵结果，验证各个版本结果是否一致 
 	for(int i=0;i<n;i++)
 	{
 		for(int j=0;j<n;j++)
@@ -24,7 +27,7 @@ int main()
 {
 	timerC  timerCPU;
 
-	int nSize = 512; 
+	int nSize = MATRIX_WIDTH; 
 	float *aMatrix , *bMatrix, *cMatrix;
 	aMatrix = (float*)malloc( nSize*nSize*sizeof(float) );
 	bMatrix = (float*)malloc( nSize*nSize*sizeof(float) );
@@ -41,16 +44,16 @@ int main()
 	printMatrix( bMatrix, nSize );
 
 	timerCPU.start();
-	// CPU 版本1，二维索引
-	cout <<"\n" <<  "CPU 版本1，二维索引" << endl;
+	// CPU 版本1，初始
+	cout <<"\n" <<  "CPU 版本1，初始" << endl;
 	matrixMul1( aMatrix, bMatrix, cMatrix, nSize );
 	printMatrix( cMatrix, nSize );
 	timerCPU.stop();
 	cout << timerCPU.getTime() << endl;
 
 	timerCPU.start();
-	// CPU 版本2，一维索引
-	cout << "\n" << "CPU 版本2，一维索引" << endl;
+	// CPU 版本2，block预备分块
+	cout << "\n" << "CPU 版本2，block预备分块" << endl;
 	memset( cMatrix, 0, nSize*nSize*sizeof(float) );
 	matrixMul2( aMatrix, bMatrix, cMatrix, nSize );
 	printMatrix( cMatrix, nSize );
@@ -58,75 +61,56 @@ int main()
 	cout << timerCPU.getTime() << endl;
 
 	timerCPU.start();
-	// CPU 版本3，block分块，二维索引
-	cout << "\n" << "CPU 版本3，block分块，二维索引" << endl;
+	// CPU 版本3，block分块
+	cout << "\n" << "CPU 版本3，block分块" << endl;
 	memset( cMatrix, 0, nSize*nSize*sizeof(float) );
 	matrixMul3( aMatrix, bMatrix, cMatrix, nSize );
 	printMatrix( cMatrix, nSize );
 	timerCPU.stop();
 	cout << timerCPU.getTime() << endl;
 
-	// 预热
-	cout << "\n预热" << endl;
+	// CUDA预热
+	cout << "\nCUDA预热" << endl;
 	setupCUDA();
 	memset( cMatrix, 0, nSize*nSize*sizeof(float) );
 	matrixMulGPU1( aMatrix, bMatrix, cMatrix, nSize );
 
-#if 1
-	timerCPU.start();
-	// GPU 版本2，一维索引
-	cout << "\n" << "GPU 版本2，一维索引" << endl;
-	memset( cMatrix, 0, nSize*nSize*sizeof(float) );
-	matrixMulGPU2( aMatrix, bMatrix, cMatrix, nSize );
-	printMatrix( cMatrix, nSize );
-	timerCPU.stop();
-	cout << "CPU time : " << timerCPU.getTime() << endl;	
-#endif
 
 #if 1
 	timerCPU.start();
-	// GPU 版本1，一维索引
-	cout << "\n" << "GPU 版本1，二维索引" << endl;
+	// GPU 版本1，初始
+	cout << "\n" << "GPU 版本1，初始" << endl;
 	memset( cMatrix, 0, nSize*nSize*sizeof(float) );
 	matrixMulGPU1( aMatrix, bMatrix, cMatrix, nSize );
 	printMatrix( cMatrix, nSize );
 	timerCPU.stop();
-	cout << "CPU time : " << timerCPU.getTime() << endl;
+	cout << "Total time : " << timerCPU.getTime() << endl;
+	matrixMulGPU1( aMatrix, bMatrix, cMatrix, nSize, true );
 #endif
 
 #if 1
 	timerCPU.start();
-	// GPU 版本3，block 初步
-	cout << "\n" << "GPU 版本3，block初步" << endl;
+	// GPU 版本2，block分块，DIY
+	cout << "\n" << "GPU 版本2，block分块，DIY" << endl;
+	memset( cMatrix, 0, nSize*nSize*sizeof(float) );
+	matrixMulGPU2( aMatrix, bMatrix, cMatrix, nSize );
+	printMatrix( cMatrix, nSize );
+	timerCPU.stop();
+	cout << "Total time : " << timerCPU.getTime() << endl;
+	matrixMulGPU2( aMatrix, bMatrix, cMatrix, nSize, true );
+#endif
+
+
+#if 1
+	timerCPU.start();
+	// GPU 版本3，block分块，SDK
+	cout << "\n" << "GPU 版本3，block分块，SDK" << endl;
 	memset( cMatrix, 0, nSize*nSize*sizeof(float) );
 	matrixMulGPU3( aMatrix, bMatrix, cMatrix, nSize );
 	printMatrix( cMatrix, nSize );
 	timerCPU.stop();
-	cout << "CPU time : " << timerCPU.getTime() << endl;
-#endif
-
-
-#if 1
-	timerCPU.start();
-	// GPU 版本4，block SAVE memory
-	cout << "\n" << "GPU 版本4，block SAVE memory" << endl;
-	memset( cMatrix, 0, nSize*nSize*sizeof(float) );
-	matrixMulGPU4( aMatrix, bMatrix, cMatrix, nSize );
-	printMatrix( cMatrix, nSize );
-	timerCPU.stop();
-	cout << "CPU time : " << timerCPU.getTime() << endl;
-#endif
-
-
-#if 1
-	timerCPU.start();
-	// GPU 版本5，block 分块，步长
-	cout << "\n" << "GPU 版本5，block 分块，步长" << endl;
-	memset( cMatrix, 0, nSize*nSize*sizeof(float) );
-	matrixMulGPU5( aMatrix, bMatrix, cMatrix, nSize );
-	printMatrix( cMatrix, nSize );
-	timerCPU.stop();
-	cout << "CPU time : " << timerCPU.getTime() << endl;
+	cout << "Total time : " << timerCPU.getTime() << endl;
+	matrixMulGPU3( aMatrix, bMatrix, cMatrix, nSize, true );
 #endif
 
 }
