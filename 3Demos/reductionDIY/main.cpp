@@ -1,8 +1,7 @@
 
 #include "reduction_cpu.h"
 #include "reduction_gpu.cuh"
-#include "timerCPP.h"
-#include "timerCUDA.h"
+#include "timerTest.h"
 
 #include <iostream>
 using namespace std;
@@ -13,8 +12,8 @@ using namespace std;
 
 void main()
 {
-	timerC  timer;
-	timerC  timerGPU;
+	timerTest  timer;
+	timerTestCU  timerGPU;
 	
 	float *a = (float *)malloc( N*sizeof(float) );
 	setArray( a, N );
@@ -78,6 +77,9 @@ void main()
 	cout << "reduction_gpu 版本1：跨步长累加，步长递增" << result << ", timer: " << timerGPU.getTime()/REPEAT <<endl;
 	printArray( a, N );
 
+	// kernel time - reduction_gpu 版本1
+	reduction_gpu1( a, N, true );
+
 	//--GPU 版本2：跨步长累加，步长递减----------	
 	timerGPU.start();
 	for(int i=0;i<REPEAT;i++)
@@ -89,6 +91,9 @@ void main()
 
 	cout << "reduction_gpu 版本2：跨步长累加，步长递减" << result << ", timer: " << timerGPU.getTime()/REPEAT <<endl;
 	printArray( a, N );
+
+	// kernel time - reduction_gpu 版本2
+	reduction_gpu2( a, N, true );
 
 	
 	//--GPU 版本3：shared memory----------	
@@ -102,6 +107,9 @@ void main()
 
 	cout << "reduction_gpu 版本3：shared memory " << result << ", timer: " << timerGPU.getTime()/REPEAT <<endl;
 	printArray( a, N );
+
+	// kernel time - reduction_gpu 版本3
+	reduction_gpu3( a, N, true );
 
 	free( a );
 }

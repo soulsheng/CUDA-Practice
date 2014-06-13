@@ -51,6 +51,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>../common;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -67,6 +68,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>../common;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -77,15 +79,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\common\timerTest.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="reduction_cpu.cpp" />
-    <ClCompile Include="timerCPP.cpp" />
-    <ClCompile Include="timerCUDA.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\common\timerTest.h" />
     <ClInclude Include="reduction_cpu.h" />
-    <ClInclude Include="timerCPP.h" />
-    <ClInclude Include="timerCUDA.h" />
   </ItemGroup>
   <ItemGroup>
     <CudaCompile Include="reduction_gpu.cu">

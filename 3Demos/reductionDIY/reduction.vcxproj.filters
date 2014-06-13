@@ -18,10 +18,7 @@
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="timerCUDA.cpp">
-      <Filter>timer</Filter>
-    </ClCompile>
-    <ClCompile Include="timerCPP.cpp">
+    <ClCompile Include="..\common\timerTest.cpp">
       <Filter>timer</Filter>
     </ClCompile>
   </ItemGroup>
@@ -29,10 +26,7 @@
     <ClInclude Include="reduction_cpu.h">
       <Filter>include</Filter>
     </ClInclude>
-    <ClInclude Include="timerCUDA.h">
-      <Filter>timer</Filter>
-    </ClInclude>
-    <ClInclude Include="timerCPP.h">
+    <ClInclude Include="..\common\timerTest.h">
       <Filter>timer</Filter>
     </ClInclude>
   </ItemGroup>

@@ -1,7 +1,11 @@
 
 #include "reduction_cpu.h"
+#include "timerTest.h"
 
 #include <cuda_runtime.h>
+
+#include <iostream>
+using namespace std;
 
 #define  BLOCKDIM	256
 
@@ -86,7 +90,7 @@ void reduction_block( float* array, int offset, int size)
 		array[0] += array[i*offset] ;
 }
 
-float reduction_gpu3( float* array, int size )
+float reduction_gpu3( float* array, int size, bool bTimeKernel )
 {
 	float* d_array ;
 	cudaMalloc( (void**)&d_array, sizeof(float)*size );
@@ -95,8 +99,19 @@ float reduction_gpu3( float* array, int size )
 
 	int sizeBlock = size>BLOCKDIM?BLOCKDIM: size;
 	int countBlock = (size+ sizeBlock-1)/sizeBlock;
+
+	timerTestCU	timerGPU;
+	if( bTimeKernel )
+		timerGPU.start();
+
 	reduction_kernel3<<< countBlock, sizeBlock >>>( d_array, size );
 
+	if( bTimeKernel )
+	{
+		timerGPU.stop();
+		cout << "Kernel time : " << timerGPU.getTime() << endl;
+	}
+
 	cudaMemcpy( array, d_array, sizeof(float)*size, cudaMemcpyDeviceToHost );
 
 	cudaFree( d_array );
@@ -106,7 +121,7 @@ float reduction_gpu3( float* array, int size )
 	return array[0];
 }
 
-float reduction_gpu2( float* array, int size )
+float reduction_gpu2( float* array, int size, bool bTimeKernel )
 {
 	float* d_array ;
 	cudaMalloc( (void**)&d_array, sizeof(float)*size );
@@ -115,8 +130,20 @@ float reduction_gpu2( float* array, int size )
 
 	int sizeBlock = size>BLOCKDIM?BLOCKDIM: size;
 	int countBlock = (size+ sizeBlock-1)/sizeBlock;
+
+	
+	timerTestCU	timerGPU;
+	if( bTimeKernel )
+		timerGPU.start();
+
 	reduction_kernel2<<< countBlock, sizeBlock >>>( d_array, size );
 
+	if( bTimeKernel )
+	{
+		timerGPU.stop();
+		cout << "Kernel time : " << timerGPU.getTime() << endl;
+	}
+
 	cudaMemcpy( array, d_array, sizeof(float)*size, cudaMemcpyDeviceToHost );
 
 	cudaFree( d_array );
@@ -126,7 +153,7 @@ float reduction_gpu2( float* array, int size )
 	return array[0];
 }
 
-float reduction_gpu1( float* array, int size )
+float reduction_gpu1( float* array, int size, bool bTimeKernel )
 {
 	float* d_array ;
 	cudaMalloc( (void**)&d_array, sizeof(float)*size );
@@ -135,7 +162,19 @@ float reduction_gpu1( float* array, int size )
 
 	int sizeBlock = size>BLOCKDIM?BLOCKDIM: size;
 	int countBlock = (size+ sizeBlock-1)/sizeBlock;
+
+	
+	timerTestCU	timerGPU;
+	if( bTimeKernel )
+		timerGPU.start();
+
 	reduction_kernel1<<< countBlock, sizeBlock >>>( d_array, size );
+
+	if( bTimeKernel )
+	{
+		timerGPU.stop();
+		cout << "Kernel time : " << timerGPU.getTime() << endl;
+	}
 
 	cudaMemcpy( array, d_array, sizeof(float)*size, cudaMemcpyDeviceToHost );
 
@@ -148,5 +187,5 @@ float reduction_gpu1( float* array, int size )
 
 void warnup_gpu( float* array, int size )
 {
-	reduction_gpu1( array, size );
+	reduction_gpu1( array, size, false );
 }

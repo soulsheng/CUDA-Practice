@@ -82,3 +82,7 @@
 /3Demos/matrixTransposeDIY/*.user
 /3Demos/matrixTransposeDIY/*.pdb
 /3Demos/reductionDIY/*.user
+/3Demos/matrixTransposeDIY/Debug
+/3Demos/reductionDIY/Debug
+/3Demos/reductionDIY/Release
+/3Demos/reductionDIY/*.pdb

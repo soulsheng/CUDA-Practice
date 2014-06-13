@@ -18,7 +18,7 @@
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="timerTest.cpp">
+    <ClCompile Include="..\common\timerTest.cpp">
       <Filter>timer</Filter>
     </ClCompile>
   </ItemGroup>
@@ -26,7 +26,7 @@
     <ClInclude Include="matrixMultiplyCPU.h">
       <Filter>include</Filter>
     </ClInclude>
-    <ClInclude Include="timerTest.h">
+    <ClInclude Include="..\common\timerTest.h">
       <Filter>timer</Filter>
     </ClInclude>
   </ItemGroup>
