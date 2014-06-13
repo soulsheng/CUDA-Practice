@@ -5,6 +5,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "matrixMultiply", "matrixMul
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "matrixTranspose", "matrixTransposeDIY\matrixTranspose.vcxproj", "{5FF92EBD-8CF0-42C9-826E-D8C99788A56F}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "reduction", "reductionDIY\reduction.vcxproj", "{821C6376-6E49-4426-B6B0-173F31AA3E61}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -27,6 +29,12 @@ Global
 		{5FF92EBD-8CF0-42C9-826E-D8C99788A56F}.Release|Win32.Build.0 = Release|Win32
 		{5FF92EBD-8CF0-42C9-826E-D8C99788A56F}.Release|x64.ActiveCfg = Release|x64
 		{5FF92EBD-8CF0-42C9-826E-D8C99788A56F}.Release|x64.Build.0 = Release|x64
+		{821C6376-6E49-4426-B6B0-173F31AA3E61}.Debug|Win32.ActiveCfg = Debug|Win32
+		{821C6376-6E49-4426-B6B0-173F31AA3E61}.Debug|Win32.Build.0 = Debug|Win32
+		{821C6376-6E49-4426-B6B0-173F31AA3E61}.Debug|x64.ActiveCfg = Debug|Win32
+		{821C6376-6E49-4426-B6B0-173F31AA3E61}.Release|Win32.ActiveCfg = Release|Win32
+		{821C6376-6E49-4426-B6B0-173F31AA3E61}.Release|Win32.Build.0 = Release|Win32
+		{821C6376-6E49-4426-B6B0-173F31AA3E61}.Release|x64.ActiveCfg = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

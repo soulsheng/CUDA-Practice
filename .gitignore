@@ -78,3 +78,6 @@
 /3Demos/MatrixTransposeTest/Release
 /3Demos/MatrixTransposeTest/*.pdb
 /3Demos/MatrixTransposeTest/*.user
+/3Demos/matrixTransposeDIY/Release
+/3Demos/matrixTransposeDIY/*.user
+/3Demos/matrixTransposeDIY/*.pdb
