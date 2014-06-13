@@ -75,3 +75,6 @@
 /3Demos/*.opensdf
 /3Demos/*.sdf
 /3Demos/ipch
+/3Demos/MatrixTransposeTest/Release
+/3Demos/MatrixTransposeTest/*.pdb
+/3Demos/MatrixTransposeTest/*.user

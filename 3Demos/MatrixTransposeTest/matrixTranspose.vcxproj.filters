@@ -15,15 +15,15 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <CudaCompile Include="test.cu" />
+    <CudaCompile Include="matrixTranspose.cu" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="mainpro.cpp">
+    <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="TransposeHeader.h">
+    <ClInclude Include="matrixTranspose.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -1,4 +1,4 @@
-#include "TransposeHeader.h"
+#include "matrixTranspose.h"
 
 ////////////////////////////////////////////////////////////////////////////////
 // declarations, forward
@@ -137,7 +137,7 @@ int main(){
 	CpuStartTime = timeGetTime();
 	computeTransposeGold(reference,M,width,height);
 	CpuStopTime = timeGetTime();
-	printf("Cpu Cost Time: %ld msec.\n",CpuStopTime-CpuStartTime);
+	printf("CPU Time: %ld msec.\n",CpuStopTime-CpuStartTime);
 
 
 	// test relative error by the formula 
