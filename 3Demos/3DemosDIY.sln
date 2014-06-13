@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "matrixMultiply", "matrixMultiplyDIY\matrixMultiply.vcxproj", "{C841BC82-5BC4-4ED2-A55F-A364927FF7BE}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "matrixTranspose", "MatrixTransposeTest\matrixTranspose.vcxproj", "{5FF92EBD-8CF0-42C9-826E-D8C99788A56F}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "matrixTranspose", "matrixTransposeDIY\matrixTranspose.vcxproj", "{5FF92EBD-8CF0-42C9-826E-D8C99788A56F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

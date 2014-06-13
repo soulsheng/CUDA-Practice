@@ -115,6 +115,8 @@ int main()
 
 
 #if 1
+	matrixMulGPU4( aMatrix, bMatrix, cMatrix, nSize ); // cuda BLAS 环境初始化
+
 	timerCPU.start();
 	// GPU 版本4，cuda BLAS
 	cout << "\n" << "GPU 版本4，cuda BLAS" << endl;
