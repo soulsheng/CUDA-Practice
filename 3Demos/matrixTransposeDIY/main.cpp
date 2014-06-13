@@ -2,7 +2,7 @@
 
 ////////////////////////////////////////////////////////////////////////////////
 // declarations, forward
-extern "C" void MatrixTransposeOnDevice(float*,float*,unsigned int,unsigned int);
+extern "C" void MatrixTransposeOnDevice(float*,float*,unsigned int,unsigned int, bool bTimerKernel=false);
 
 ////////////////////////////////////////////////////////////////////////////////
 // Program main
@@ -61,54 +61,34 @@ int main(){
 			P[i] = 0.0f;
 	}
 
+	int size= width*height*sizeof(float);
+	printf("(width:%d, height:%d), data size=%.3f MBytes\n",width, height, size/(1000000.0f));
+
+	// warmup
+	MatrixTransposeOnDevice(P,M,width,height);
+
 	// Start Timing
 	// Allocate CUDA events that we'll use for timing
-	cudaEvent_t start;
-	error = cudaEventCreate(&start);
-	if (error != cudaSuccess)
-	{
-		fprintf(stderr, "Failed to create start event (error code %s)!\n", cudaGetErrorString(error));
-		exit(EXIT_FAILURE);
-	}
+	cudaEvent_t start,stop;
 
-	cudaEvent_t stop;
-	error = cudaEventCreate(&stop);
-	if (error != cudaSuccess)
-	{
-		fprintf(stderr, "Failed to create stop event (error code %s)!\n", cudaGetErrorString(error));
-		exit(EXIT_FAILURE);
-	}
-
+	cudaEventCreate(&start);
+	cudaEventCreate(&stop);
+	
 	// Record the start event
 	error = cudaEventRecord(start, NULL);
-	if (error != cudaSuccess)
+	
+
+	for (int i=0; i < NUM_REPS; i++)
 	{
-		fprintf(stderr, "Failed to record start event (error code %s)!\n", cudaGetErrorString(error));
-		exit(EXIT_FAILURE);
+		// transpose on the device
+		MatrixTransposeOnDevice(P,M,width,height);
 	}
-
-
-	// transpose on the device
-	MatrixTransposeOnDevice(P,M,width,height);
-	//Prinf(P);
 
 	// Record the stop event
-	error = cudaEventRecord(stop, NULL);
-
-	if (error != cudaSuccess)
-	{
-		fprintf(stderr, "Failed to record stop event (error code %s)!\n", cudaGetErrorString(error));
-		exit(EXIT_FAILURE);
-	}
+	cudaEventRecord(stop, NULL);
 
 	// Wait for the stop event to complete
-	error = cudaEventSynchronize(stop);
-
-	if (error != cudaSuccess)
-	{
-		fprintf(stderr, "Failed to synchronize on the stop event (error code %s)!\n", cudaGetErrorString(error));
-		exit(EXIT_FAILURE);
-	}
+	cudaEventSynchronize(stop);
 
 	float msecTotal = 0.0f;
 	error = cudaEventElapsedTime(&msecTotal, start, stop);
@@ -121,7 +101,10 @@ int main(){
 
 	// Compute and print the performance
 	float msecPerMatrixMul = msecTotal;
-	printf(	"GPU Time= %.3f msec \n",msecPerMatrixMul);
+	printf(	"\nGPU Time Total = %.3f msec \n",msecPerMatrixMul/NUM_REPS);
+
+	// Test Kernel Time 
+	MatrixTransposeOnDevice(P,M,width,height, true );
 
 	//compute the matrix multiplication on the CPU for comparison
 	float *reference = NULL;
@@ -137,7 +120,7 @@ int main(){
 	CpuStartTime = timeGetTime();
 	computeTransposeGold(reference,M,width,height);
 	CpuStopTime = timeGetTime();
-	printf("CPU Time: %ld msec.\n",CpuStopTime-CpuStartTime);
+	printf("\nCPU Time: %ld msec.\n",CpuStopTime-CpuStartTime);
 
 
 	// test relative error by the formula 
@@ -154,7 +137,7 @@ int main(){
 		}
 	}
 
-	printf("%s\n", correct ? "Result = PASS" : "Result = FAIL");
+	printf("\n%s\n", correct ? "Result = PASS" : "Result = FAIL");
 
 	// output result if output file is requested
 

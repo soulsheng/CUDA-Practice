@@ -18,4 +18,6 @@
 #define width 1024
 #define height 1024
 
+#define NUM_REPS  100
+
 #endif // _TRANSPOSEHEADER_H_
