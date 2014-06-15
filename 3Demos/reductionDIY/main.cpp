@@ -6,7 +6,7 @@
 #include <iostream>
 using namespace std;
 
-#define N (1<<21)
+#define N (1<<24)
 #define REPEAT   10
 
 

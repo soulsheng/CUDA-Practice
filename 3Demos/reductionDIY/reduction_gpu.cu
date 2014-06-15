@@ -14,7 +14,7 @@ __global__ void reduction_kernel3( float* array, int size )
 {
 	__shared__ float sarray[BLOCKDIM];
 
-	int bid = blockIdx.x;
+	int bid = blockIdx.y * gridDim.x + blockIdx.x;
 	int tid = threadIdx.x;
 	
 	if( bid*blockDim.x + tid > size )
@@ -100,11 +100,19 @@ float reduction_gpu3( float* array, int size, bool bTimeKernel )
 	int sizeBlock = size>BLOCKDIM?BLOCKDIM: size;
 	int countBlock = (size+ sizeBlock-1)/sizeBlock;
 
+	dim3 dim3Block;
+	dim3Block.x = countBlock;
+	if( countBlock > 32768 )
+	{
+		dim3Block.x = 32768;
+		dim3Block.y = countBlock/32768;
+	}
+
 	timerTestCU	timerGPU;
 	if( bTimeKernel )
 		timerGPU.start();
 
-	reduction_kernel3<<< countBlock, sizeBlock >>>( d_array, size );
+	reduction_kernel3<<< dim3Block, sizeBlock >>>( d_array, size );
 
 	if( bTimeKernel )
 	{
