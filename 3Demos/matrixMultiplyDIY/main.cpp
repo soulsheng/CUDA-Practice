@@ -112,6 +112,11 @@ int main()
 	timerCPU.stop();
 	cout << "Total time(ms) : " << timerCPU.getTime() << endl;
 	matrixMulGPU1( aMatrix, bMatrix, cMatrix, nSize, true );
+
+	if( verify( cMatrix, cMatrix_ref, nSize ) )
+		cout << "GPU 版本1，verify passed!" << endl;
+	else
+		cout << "GPU 版本1，verify failed!" << endl;
 #endif
 
 #if 1
@@ -124,6 +129,11 @@ int main()
 	timerCPU.stop();
 	cout << "Total time(ms) : " << timerCPU.getTime() << endl;
 	matrixMulGPU2( aMatrix, bMatrix, cMatrix, nSize, true );
+
+	if( verify( cMatrix, cMatrix_ref, nSize ) )
+		cout << "GPU 版本2，verify passed!" << endl;
+	else
+		cout << "GPU 版本2，verify failed!" << endl;
 #endif
 
 
@@ -137,6 +147,11 @@ int main()
 	timerCPU.stop();
 	cout << "Total time(ms) : " << timerCPU.getTime() << endl;
 	matrixMulGPU3( aMatrix, bMatrix, cMatrix, nSize, true );
+
+	if( verify( cMatrix, cMatrix_ref, nSize ) )
+		cout << "GPU 版本3，verify passed!" << endl;
+	else
+		cout << "GPU 版本3，verify failed!" << endl;
 #endif
 
 
@@ -152,5 +167,10 @@ int main()
 	timerCPU.stop();
 	cout << "Total time(ms) : " << timerCPU.getTime() << endl;
 	matrixMulGPU4( aMatrix, bMatrix, cMatrix, nSize, true );
+
+	if( verify( cMatrix, cMatrix_ref, nSize ) )
+		cout << "GPU 版本4，verify passed!" << endl;
+	else
+		cout << "GPU 版本4，verify failed!" << endl;
 #endif
 }
