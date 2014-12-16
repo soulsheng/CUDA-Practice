@@ -23,15 +23,30 @@ void printMatrix( float* m, int n )
 
 }
 
+bool verify( float* m, float* m_ref, int n )
+{
+	for(int i=0;i<n;i++)
+	{
+		for(int j=0;j<n;j++)
+		{
+			if( m[ i*n+j ] != m_ref[ i*n+j ] )
+				return false;
+		}
+	}
+		
+	return true; 
+}
+
 int main()
 {
 	timerTestCU  timerCPU;
 
 	int nSize = MATRIX_WIDTH; 
-	float *aMatrix , *bMatrix, *cMatrix;
+	float *aMatrix , *bMatrix, *cMatrix, *cMatrix_ref;
 	aMatrix = (float*)malloc( nSize*nSize*sizeof(float) );
 	bMatrix = (float*)malloc( nSize*nSize*sizeof(float) );
 	cMatrix = (float*)malloc( nSize*nSize*sizeof(float) );
+	cMatrix_ref = (float*)malloc( nSize*nSize*sizeof(float) );
 
 	for(int i=0;i<nSize*nSize;i++)
 	{
@@ -39,6 +54,7 @@ int main()
 		bMatrix[i] = rand() % 10;	
 	}
 	memset( cMatrix, 0, nSize*nSize*sizeof(float) );
+	memset( cMatrix_ref, 0, nSize*nSize*sizeof(float) );
 
 	printMatrix( aMatrix, nSize );
 	printMatrix( bMatrix, nSize );
@@ -46,7 +62,7 @@ int main()
 	timerCPU.start();
 	// CPU 版本1，初始
 	cout <<"\n" <<  "CPU 版本1，初始" << endl;
-	matrixMul1( aMatrix, bMatrix, cMatrix, nSize );
+	matrixMul1( aMatrix, bMatrix, cMatrix_ref, nSize );
 	printMatrix( cMatrix, nSize );
 	timerCPU.stop();
 	cout << "Total time(ms) : " << timerCPU.getTime() << endl;
@@ -60,6 +76,11 @@ int main()
 	timerCPU.stop();
 	cout << "Total time(ms) : " << timerCPU.getTime() << endl;
 
+	if( verify( cMatrix, cMatrix_ref, nSize ) )
+		cout << "CPU 版本2，verify passed!" << endl;
+	else
+		cout << "CPU 版本2，verify failed!" << endl;
+
 	timerCPU.start();
 	// CPU 版本3，block分块
 	cout << "\n" << "CPU 版本3，block分块" << endl;
@@ -68,6 +89,11 @@ int main()
 	printMatrix( cMatrix, nSize );
 	timerCPU.stop();
 	cout << "Total time(ms) : " << timerCPU.getTime() << endl;
+
+	if( verify( cMatrix, cMatrix_ref, nSize ) )
+		cout << "CPU 版本3，verify passed!" << endl;
+	else
+		cout << "CPU 版本3，verify failed!" << endl;
 
 	// CUDA预热
 	cout << "\nCUDA预热" << endl;
