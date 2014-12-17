@@ -47,8 +47,8 @@ __constant__ float c_x0[1], c_y0[1];
 __global__
 void polygonDistance_kernel( float *x, float *y, int n, float *d )
 {
-	int i = threadIdx.x;
-
+	int i = threadIdx.x + blockIdx.x * blockDim.x;
+	if( i >= n ) return;
 	d[i] = sqrt( (x[i]-*c_x0)*(x[i]-*c_x0) + (y[i]-*c_y0)*(y[i]-*c_y0) );
 }
 
@@ -56,7 +56,7 @@ void polygonDistance_body( float x0, float y0, float *x, float *y, int n, float 
 {
 	//for ( int i=0; i<n; i++ )
 	{
-		polygonDistance_kernel<<<1,n>>>( x, y, n, d );
+		polygonDistance_kernel<<<(n+31)/32,32>>>( x, y, n, d );
 	}
 }
 
