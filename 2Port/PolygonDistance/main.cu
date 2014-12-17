@@ -2,6 +2,8 @@
 #include <iostream>
 using namespace std;
 
+#include <cuda_runtime.h>
+
 // Step 3: 函数声明
 void polygonDistance( float x0, float y0, float *x, float *y, int n, float *d );
 
@@ -18,7 +20,7 @@ void main()
 	float x0 = 1.0f;
 	float y0 = 2.0f;
 
-	int n = 10000;
+	int n = 100;
 
 	cout << "Step 2: 数组申请" << endl;
 
@@ -39,19 +41,19 @@ void main()
 
 	cout << "Polygon Distance end! " << endl;
 }
-
-void polygonDistance_kernel( float x0, float y0, float *x, float *y, int n, float *d, int index )
+__global__
+void polygonDistance_kernel( float x0, float y0, float *x, float *y, int n, float *d )
 {
-	int i = index;
+	int i = threadIdx.x;
 
 	d[i] = sqrt( (x[i]-x0)*(x[i]-x0) + (y[i]-y0)*(y[i]-y0) );
 }
 
 void polygonDistance_body( float x0, float y0, float *x, float *y, int n, float *d )
 {
-	for ( int i=0; i<n; i++ )
+	//for ( int i=0; i<n; i++ )
 	{
-		polygonDistance_kernel( x0, y0, x, y, n, d, i);
+		polygonDistance_kernel<<<1,n>>>( x0, y0, x, y, n, d );
 	}
 }
 
@@ -61,6 +63,16 @@ void polygonDistance( float x0, float y0, float *x, float *y, int n, float *d )
 	cout << "Step 3: 函数声明" << endl;
 	cout << "Step 4: 函数实现" << endl;
 
-	polygonDistance_body( x0, y0, x, y, n, d);
+	float *gpu_x, *gpu_y, *gpu_d;
+	cudaMalloc( &gpu_x, n * sizeof(float) );
+	cudaMalloc( &gpu_y, n * sizeof(float) );
+	cudaMalloc( &gpu_d, n * sizeof(float) );
+
+	cudaMemcpy( gpu_x, x, n * sizeof(float), cudaMemcpyHostToDevice );
+	cudaMemcpy( gpu_y, y, n * sizeof(float), cudaMemcpyHostToDevice );
+
+	polygonDistance_body( x0, y0, gpu_x, gpu_y, n, gpu_d);
 	
+	cudaMemcpy( d, gpu_d, n * sizeof(float), cudaMemcpyDeviceToHost );
+
 }
