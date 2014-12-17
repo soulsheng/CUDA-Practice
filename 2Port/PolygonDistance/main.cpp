@@ -46,4 +46,8 @@ void polygonDistance( float x0, float y0, float *xi, float *yi, int n, float *di
 	cout << "Step 3: 函数声明" << endl;
 	cout << "Step 4: 函数实现" << endl;
 
+	for ( int i=0; i<n; i++ )
+	{
+		di[i] = sqrt( (xi[i]-x0)*(xi[i]-x0) + (yi[i]-y0)*(yi[i]-y0) );
+	}
 }
