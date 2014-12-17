@@ -6,6 +6,8 @@ using namespace std;
 
 // Step 3: 函数声明
 void polygonDistance( float x0, float y0, float *x, float *y, int n, float *d );
+void polygonDistance_ref( float x0, float y0, float *x, float *y, int n, float *d );
+bool verify( float *d, float *d_ref, int n );
 
 
 void main()
@@ -20,7 +22,7 @@ void main()
 	float x0 = 1.0f;
 	float y0 = 2.0f;
 
-	int n = 100000000;
+	int n = 10000000;
 
 	cout << "Step 2: 数组申请" << endl;
 
@@ -28,16 +30,24 @@ void main()
 	float *x = (float*)malloc( n * sizeof(float) );
 	float *y = (float*)malloc( n * sizeof(float) );
 	float *d = (float*)malloc( n * sizeof(float) );
+	float *d_ref = (float*)malloc( n * sizeof(float) );
 
 	for (int i=0;i<n;i++)
 	{
 		x[i] = sin( (float)i/n );
 		y[i] = cos( (float)i/n );
 		d[i] = 0.0f;
+		d_ref[i] = 0.0f;
 	}
 
 	cout << "Step 5: 函数调用" << endl;
 	polygonDistance( x0, y0, x, y, n, d);
+
+	polygonDistance_ref( x0, y0, x, y, n, d_ref);
+	if( verify( d, d_ref, n ) )
+		cout << "verify passed!" << endl;
+	else
+		cout << "verify failed!" << endl;
 
 	cout << "Polygon Distance end! " << endl;
 }
@@ -86,4 +96,23 @@ void polygonDistance( float x0, float y0, float *x, float *y, int n, float *d )
 	cudaError err = cudaGetLastError();
 	if( err != cudaSuccess )
 		cout << "error" << endl;
+}
+
+void polygonDistance_ref( float x0, float y0, float *x, float *y, int n, float *d_ref )
+{
+	for ( int i=0; i<n; i++ )
+	{
+		d_ref[i] = sqrt( (x[i]-x0)*(x[i]-x0) + (y[i]-y0)*(y[i]-y0) );
+	}	
+}
+
+bool verify( float *d, float *d_ref, int n )
+{
+	for ( int i=0; i<n; i++ )
+	{
+		if( fabs( d[i] - d_ref[i] ) > 1e-5 )
+			return false;
+	}
+
+	return true;
 }
