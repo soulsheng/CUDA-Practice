@@ -55,8 +55,10 @@ void polygonDistance_kernel( float *x, float *y, int n, float *d )
 void polygonDistance_body( float x0, float y0, float *x, float *y, int n, float *d )
 {
 	//for ( int i=0; i<n; i++ )
+	dim3 block( 32 );
+	dim3 grid( (n+31)/32 );
 	{
-		polygonDistance_kernel<<<(n+31)/32,32>>>( x, y, n, d );
+		polygonDistance_kernel<<<grid,block>>>( x, y, n, d );
 	}
 }
 
