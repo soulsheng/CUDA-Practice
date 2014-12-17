@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "c2cu", "c2cu\c2cu.vcxproj", "{C841BC82-5BC4-4ED2-A55F-A364927FF7BE}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "matrixMul", "matrixMul-SDK\matrixMul_vs2010.vcxproj", "{C986E2A6-ABF8-4ABC-B292-63744CC03DFB}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PolygonDistance", "PolygonDistance\PolygonDistance.vcxproj", "{D667BAC0-F125-4BAA-9CF3-F40CA6D62E91}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -19,14 +19,12 @@ Global
 		{C841BC82-5BC4-4ED2-A55F-A364927FF7BE}.Release|Win32.ActiveCfg = Release|Win32
 		{C841BC82-5BC4-4ED2-A55F-A364927FF7BE}.Release|Win32.Build.0 = Release|Win32
 		{C841BC82-5BC4-4ED2-A55F-A364927FF7BE}.Release|x64.ActiveCfg = Release|Win32
-		{C986E2A6-ABF8-4ABC-B292-63744CC03DFB}.Debug|Win32.ActiveCfg = Debug|Win32
-		{C986E2A6-ABF8-4ABC-B292-63744CC03DFB}.Debug|Win32.Build.0 = Debug|Win32
-		{C986E2A6-ABF8-4ABC-B292-63744CC03DFB}.Debug|x64.ActiveCfg = Debug|x64
-		{C986E2A6-ABF8-4ABC-B292-63744CC03DFB}.Debug|x64.Build.0 = Debug|x64
-		{C986E2A6-ABF8-4ABC-B292-63744CC03DFB}.Release|Win32.ActiveCfg = Release|Win32
-		{C986E2A6-ABF8-4ABC-B292-63744CC03DFB}.Release|Win32.Build.0 = Release|Win32
-		{C986E2A6-ABF8-4ABC-B292-63744CC03DFB}.Release|x64.ActiveCfg = Release|x64
-		{C986E2A6-ABF8-4ABC-B292-63744CC03DFB}.Release|x64.Build.0 = Release|x64
+		{D667BAC0-F125-4BAA-9CF3-F40CA6D62E91}.Debug|Win32.ActiveCfg = Debug|Win32
+		{D667BAC0-F125-4BAA-9CF3-F40CA6D62E91}.Debug|Win32.Build.0 = Debug|Win32
+		{D667BAC0-F125-4BAA-9CF3-F40CA6D62E91}.Debug|x64.ActiveCfg = Debug|Win32
+		{D667BAC0-F125-4BAA-9CF3-F40CA6D62E91}.Release|Win32.ActiveCfg = Release|Win32
+		{D667BAC0-F125-4BAA-9CF3-F40CA6D62E91}.Release|Win32.Build.0 = Release|Win32
+		{D667BAC0-F125-4BAA-9CF3-F40CA6D62E91}.Release|x64.ActiveCfg = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

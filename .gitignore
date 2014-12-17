@@ -86,3 +86,11 @@
 /3Demos/reductionDIY/Debug
 /3Demos/reductionDIY/Release
 /3Demos/reductionDIY/*.pdb
+/2Port/Debug
+/2Port/ipch
+/2Port/Release
+/2Port/PolygonDistance/Release
+/2Port/PolygonDistance/Debug
+/2Port/c2cu/Debug
+/2Port/c2cu/Release
+/2Port/c2cu/*.pdb
