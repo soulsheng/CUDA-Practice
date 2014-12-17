@@ -3,6 +3,7 @@
 using namespace std;
 
 #include <cuda_runtime.h>
+#include "helper_timer.h"
 
 // Step 3: 函数声明
 void polygonDistance( float x0, float y0, float *x, float *y, int n, float *d );
@@ -22,7 +23,7 @@ void main()
 	float x0 = 1.0f;
 	float y0 = 2.0f;
 
-	int n = 10000000;
+	int n = 16*1024*1024;
 
 	cout << "Step 2: 数组申请" << endl;
 
@@ -41,9 +42,29 @@ void main()
 	}
 
 	cout << "Step 5: 函数调用" << endl;
+
+	StopWatchInterface *watchTime;
+	sdkCreateTimer( &watchTime );
+
+	// test time of gpu
+	sdkStartTimer( &watchTime );
+	
 	polygonDistance( x0, y0, x, y, n, d);
+	cudaDeviceSynchronize();
+
+	sdkStopTimer( &watchTime );
+	cout << sdkGetTimerValue( &watchTime ) << " ms" << endl;
+
+	// test time of cpu
+	sdkResetTimer( &watchTime );
+	sdkStartTimer( &watchTime );
 
 	polygonDistance_ref( x0, y0, x, y, n, d_ref);
+
+	sdkStopTimer( &watchTime );
+	cout << sdkGetTimerValue( &watchTime ) << " ms" << endl;
+
+
 	if( verify( d, d_ref, n ) )
 		cout << "verify passed!" << endl;
 	else
