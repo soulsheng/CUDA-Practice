@@ -20,7 +20,7 @@ void main()
 	float x0 = 1.0f;
 	float y0 = 2.0f;
 
-	int n = 100;
+	int n = 10000000;
 
 	cout << "Step 2: Êý×éÉêÇë" << endl;
 
@@ -55,8 +55,8 @@ void polygonDistance_kernel( float *x, float *y, int n, float *d )
 void polygonDistance_body( float x0, float y0, float *x, float *y, int n, float *d )
 {
 	//for ( int i=0; i<n; i++ )
-	dim3 block( 32 );
-	dim3 grid( (n+31)/32 );
+	dim3 block( 1024 );
+	dim3 grid( (n+1023)/1024 );
 	{
 		polygonDistance_kernel<<<grid,block>>>( x, y, n, d );
 	}
@@ -83,4 +83,7 @@ void polygonDistance( float x0, float y0, float *x, float *y, int n, float *d )
 	
 	cudaMemcpy( d, gpu_d, n * sizeof(float), cudaMemcpyDeviceToHost );
 
+	cudaError err = cudaGetLastError();
+	if( err != cudaSuccess )
+		cout << "error" << endl;
 }
