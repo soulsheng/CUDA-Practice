@@ -42,6 +42,7 @@ void main()
 	}
 
 	cout << "Step 5: º¯Êýµ÷ÓÃ" << endl;
+	cout << " n = " << n << endl;
 
 	StopWatchInterface *watchTime;
 	sdkCreateTimer( &watchTime );
@@ -53,7 +54,7 @@ void main()
 	cudaDeviceSynchronize();
 
 	sdkStopTimer( &watchTime );
-	cout << sdkGetTimerValue( &watchTime ) << " ms" << endl;
+	cout << sdkGetTimerValue( &watchTime ) << " ms on GPU" << endl;
 
 	// test time of cpu
 	sdkResetTimer( &watchTime );
@@ -62,7 +63,7 @@ void main()
 	polygonDistance_ref( x0, y0, x, y, n, d_ref);
 
 	sdkStopTimer( &watchTime );
-	cout << sdkGetTimerValue( &watchTime ) << " ms" << endl;
+	cout << sdkGetTimerValue( &watchTime ) << " ms on CPU" << endl;
 
 
 	if( verify( d, d_ref, n ) )
