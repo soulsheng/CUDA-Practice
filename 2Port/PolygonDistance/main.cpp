@@ -3,7 +3,7 @@
 using namespace std;
 
 // Step 3: 函数声明
-void polygonDistance( float x0, float y0, float *xi, float *yi, int n, float *di );
+void polygonDistance( float x0, float y0, float *x, float *y, int n, float *d );
 
 
 void main()
@@ -23,31 +23,31 @@ void main()
 	cout << "Step 2: 数组申请" << endl;
 
 	// 多边形顶点 pi(xi,yi)
-	float *xi = (float*)malloc( n * sizeof(float) );
-	float *yi = (float*)malloc( n * sizeof(float) );
-	float *di = (float*)malloc( n * sizeof(float) );
+	float *x = (float*)malloc( n * sizeof(float) );
+	float *y = (float*)malloc( n * sizeof(float) );
+	float *d = (float*)malloc( n * sizeof(float) );
 
 	for (int i=0;i<n;i++)
 	{
-		xi[i] = sin( (float)i/n );
-		yi[i] = cos( (float)i/n );
-		di[i] = 0.0f;
+		x[i] = sin( (float)i/n );
+		y[i] = cos( (float)i/n );
+		d[i] = 0.0f;
 	}
 
 	cout << "Step 5: 函数调用" << endl;
-	polygonDistance( x0, y0, xi, yi, n, di);
+	polygonDistance( x0, y0, x, y, n, d);
 
 	cout << "Polygon Distance end! " << endl;
 }
 
 // Step 4: 函数实现
-void polygonDistance( float x0, float y0, float *xi, float *yi, int n, float *di )
+void polygonDistance( float x0, float y0, float *x, float *y, int n, float *d )
 {
 	cout << "Step 3: 函数声明" << endl;
 	cout << "Step 4: 函数实现" << endl;
 
 	for ( int i=0; i<n; i++ )
 	{
-		di[i] = sqrt( (xi[i]-x0)*(xi[i]-x0) + (yi[i]-y0)*(yi[i]-y0) );
+		d[i] = sqrt( (x[i]-x0)*(x[i]-x0) + (y[i]-y0)*(y[i]-y0) );
 	}
 }
