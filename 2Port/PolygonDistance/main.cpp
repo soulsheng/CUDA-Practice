@@ -40,14 +40,27 @@ void main()
 	cout << "Polygon Distance end! " << endl;
 }
 
+void polygonDistance_kernel( float x0, float y0, float *x, float *y, int n, float *d, int index )
+{
+	int i = index;
+
+	d[i] = sqrt( (x[i]-x0)*(x[i]-x0) + (y[i]-y0)*(y[i]-y0) );
+}
+
+void polygonDistance_body( float x0, float y0, float *x, float *y, int n, float *d )
+{
+	for ( int i=0; i<n; i++ )
+	{
+		polygonDistance_kernel( x0, y0, x, y, n, d, i);
+	}
+}
+
 // Step 4: 函数实现
 void polygonDistance( float x0, float y0, float *x, float *y, int n, float *d )
 {
 	cout << "Step 3: 函数声明" << endl;
 	cout << "Step 4: 函数实现" << endl;
 
-	for ( int i=0; i<n; i++ )
-	{
-		d[i] = sqrt( (x[i]-x0)*(x[i]-x0) + (y[i]-y0)*(y[i]-y0) );
-	}
+	polygonDistance_body( x0, y0, x, y, n, d);
+	
 }
