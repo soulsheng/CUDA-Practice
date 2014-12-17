@@ -20,7 +20,7 @@ void main()
 	float x0 = 1.0f;
 	float y0 = 2.0f;
 
-	int n = 10000000;
+	int n = 100000000;
 
 	cout << "Step 2: Êý×éÉêÇë" << endl;
 
@@ -47,7 +47,7 @@ __constant__ float c_x0[1], c_y0[1];
 __global__
 void polygonDistance_kernel( float *x, float *y, int n, float *d )
 {
-	int i = threadIdx.x + blockIdx.x * blockDim.x;
+	int i = threadIdx.x + (blockIdx.x + blockIdx.y * gridDim.x) * blockDim.x;
 	if( i >= n ) return;
 	d[i] = sqrt( (x[i]-*c_x0)*(x[i]-*c_x0) + (y[i]-*c_y0)*(y[i]-*c_y0) );
 }
@@ -56,7 +56,7 @@ void polygonDistance_body( float x0, float y0, float *x, float *y, int n, float 
 {
 	//for ( int i=0; i<n; i++ )
 	dim3 block( 1024 );
-	dim3 grid( (n+1023)/1024 );
+	dim3 grid( (n+1024*32-1)/1024/32, 32 );
 	{
 		polygonDistance_kernel<<<grid,block>>>( x, y, n, d );
 	}
