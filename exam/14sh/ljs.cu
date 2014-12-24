@@ -7,7 +7,7 @@
 #include <math.h>
 #include <stdlib.h> 
 
-#define VECTOR_LEN	(2048)
+#define VECTOR_LEN	(8192)
 #define BLOCK_DIM	(256)
 
 void cpu_calculate(int	*vetor,
@@ -63,7 +63,7 @@ __global__ void calulate_max_min(float *mul_res,
 	float max_tmp, min_tmp, max, min;
 	__shared__ float share_mem[BLOCK_DIM];
 
-	x = blockDim.x * blockIdx.x + threadIdx.x;
+	x = blockDim.x * (blockIdx.x + blockIdx.y * gridDim.x ) + threadIdx.x;
 
 	share_mem[threadIdx.x] = mul_res[x];
 
@@ -92,8 +92,8 @@ __global__ void calulate_max_min(float *mul_res,
 
 	if(threadIdx.x == 0)
 	{
-		max_res[blockIdx.x] = max_tmp;
-		min_res[blockIdx.x] = min_tmp;
+		max_res[blockIdx.x + blockIdx.y * gridDim.x ] = max_tmp;
+		min_res[blockIdx.x + blockIdx.y * gridDim.x ] = min_tmp;
 	}
 }
 
@@ -255,11 +255,15 @@ void gpu_calculate(int	*vetor,
 
 	cudaMemcpy( mat, mat_mul_res, sizeof(int) * vector_len * vector_len, cudaMemcpyDeviceToHost );
 
+	cudaError err = cudaGetLastError();
+	if( err!= cudaSuccess )
+		printf( "failed to calculate_mul\n" );
+
 	block_dim.x = BLOCK_DIM;
 	block_dim.y = 1;
 
-	grid_dim.x = (vector_len * vector_len + BLOCK_DIM - 1) / BLOCK_DIM; 
-	grid_dim.y = 1;
+	grid_dim.x = (vector_len + BLOCK_DIM - 1) / BLOCK_DIM; 
+	grid_dim.y = vector_len;
 
 	calulate_max_min<<<grid_dim, block_dim>>>(mat_mul_res, max_res, min_res);
 
@@ -268,6 +272,10 @@ void gpu_calculate(int	*vetor,
 	{
         goto INIT_FAILED;
     }
+	
+	err = cudaGetLastError();
+	if( err!= cudaSuccess )
+		printf( "failed to calulate_max_min\n" );
 
 	cudaStatus = cudaMemcpy(min_res_cpu, min_res, sizeof(int) * (vector_len * vector_len + BLOCK_DIM - 1) / BLOCK_DIM, cudaMemcpyDeviceToHost);
     if (cudaStatus != cudaSuccess) 
