@@ -6,6 +6,7 @@
 #include <malloc.h>
 #include <math.h>
 #include <stdlib.h> 
+#include "helper_timer.h"
 
 #define VECTOR_LEN	(8192)
 #define BLOCK_DIM	(256)
@@ -21,6 +22,12 @@ void cpu_calculate(int	*vetor,
 	float zhi = 0.0f;
 	float max_tmp, min_tmp,  tmp;
 
+	StopWatchInterface *wt;
+	sdkCreateTimer(&wt);
+
+	sdkResetTimer(&wt);
+	sdkStartTimer(&wt);
+
 	result = 0;
 	for(i = 0; i < vector_len; i++)
 	{
@@ -28,6 +35,13 @@ void cpu_calculate(int	*vetor,
 	}
 	zhi = sqrt((double) result);
 	printf("cpu zhi:%f\n", zhi);
+
+	cudaDeviceSynchronize();
+	sdkStopTimer(&wt);
+	printf("square_sum : %3.1f ms\n", sdkGetTimerValue(&wt));
+	
+	sdkResetTimer(&wt);
+	sdkStartTimer(&wt);
 
 	max_tmp = -10000.0f;
 	min_tmp = 100000.0f;
@@ -53,6 +67,12 @@ void cpu_calculate(int	*vetor,
 
 	*min = min_tmp;
 	*max = max_tmp;
+
+	
+	cudaDeviceSynchronize();
+	sdkStopTimer(&wt);
+	printf("calulate_max_min of mat : %3.1f ms\n", sdkGetTimerValue(&wt));
+
 }
 
 __global__ void calulate_max_min(float *mul_res,
@@ -163,6 +183,9 @@ void gpu_calculate(int	*vetor,
 	float *max_res_cpu = NULL;
 	float *min_res_cpu = NULL;
 
+	StopWatchInterface *wt;
+	sdkCreateTimer(&wt);
+
 	cudaStatus = cudaMalloc((void**)&mat_mul_res, vector_len * vector_len * sizeof(float));
 	if (cudaStatus != cudaSuccess || mat_mul_res == NULL) 
 	{
@@ -228,6 +251,9 @@ void gpu_calculate(int	*vetor,
 	grid_dim.x = (vector_len + BLOCK_DIM - 1) / BLOCK_DIM; 
 	grid_dim.y = 1;
 
+	sdkResetTimer(&wt);
+	sdkStartTimer(&wt);
+
 	square_sum_kernel<<<grid_dim, block_dim>>>(vector_dev, vector_len, square_sum);
 
 	cudaStatus = cudaMemcpy(square_sum_cpu, square_sum, sizeof(int) * (vector_len + BLOCK_DIM - 1) / BLOCK_DIM, cudaMemcpyDeviceToHost);
@@ -245,6 +271,14 @@ void gpu_calculate(int	*vetor,
 	zhi = sqrt((double)res);
 	printf("gpu zhi:%f\n", zhi);
 
+	cudaDeviceSynchronize();
+	sdkStopTimer(&wt);
+	printf("square_sum_kernel : %3.1f ms\n", sdkGetTimerValue(&wt));
+
+	
+	sdkResetTimer(&wt);
+	sdkStartTimer(&wt);
+
 	block_dim.x = 16;
 	block_dim.y = 16;
 
@@ -258,6 +292,13 @@ void gpu_calculate(int	*vetor,
 	cudaError err = cudaGetLastError();
 	if( err!= cudaSuccess )
 		printf( "failed to calculate_mul\n" );
+	
+	cudaDeviceSynchronize();
+	sdkStopTimer(&wt);
+	printf("calculate_mul : %3.1f ms\n", sdkGetTimerValue(&wt));
+	
+	sdkResetTimer(&wt);
+	sdkStartTimer(&wt);
 
 	block_dim.x = BLOCK_DIM;
 	block_dim.y = 1;
@@ -300,6 +341,11 @@ void gpu_calculate(int	*vetor,
 
 	*max = max_tmp;
 	*min = min_tmp;
+
+		
+	cudaDeviceSynchronize();
+	sdkStopTimer(&wt);
+	printf("calulate_max_min : %3.1f ms\n", sdkGetTimerValue(&wt));
 
 INIT_FAILED:
 	if(mat_mul_res != NULL)
