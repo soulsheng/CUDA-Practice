@@ -16,6 +16,8 @@
 
 #define MAXMIN_B_DIM 256
 #define MAXMIN_DIM 1024  //算最大最小值的分块
+#define NEED_BLOCK ( ((N)*(N) + MAXMIN_DIM -1 )/ MAXMIN_DIM )
+
 bool verify(float *ab,float *abGpu,int n)
 {
 	for(int i=0;i<n;i++){
@@ -131,13 +133,13 @@ __global__ void gpuMaxA(float *A,float *MaxTemp)
 {
 	__shared__ float SData[MAXMIN_DIM];
 	__shared__ float max_Block;
-	int  bx=blockIdx.x;  
+	int  bx=blockIdx.x+ blockIdx.y*gridDim.x;  
 	int  tx=threadIdx.x;
 	
 
 	int tid=bx*blockDim.x+tx;
-	int Times=(N*N+gridDim.x*blockDim.x-1)/(gridDim.x*blockDim.x);
-	for(int i=0;i<Times;i++){
+	//int Times=(N*N+gridDim.x*blockDim.x-1)/(gridDim.x*blockDim.x);
+	//for(int i=0;i<Times;i++){
 		if(tid<N*N){
 			SData[tx]=A[tid];
 		}
@@ -148,11 +150,12 @@ __global__ void gpuMaxA(float *A,float *MaxTemp)
 		for(unsigned int s=blockDim.x/2;s>0;s>>=1){
 			if(tx<s){
 				if(SData[tx]<SData[tx+s]){
-					SData[tx+s]=SData[tx];
+					SData[tx]=SData[tx+s];
 				}
 			}
 			__syncthreads();
 		}
+#if 0
 		if(tx==0){
 			if(i==0){
 				max_Block=SData[0];
@@ -166,8 +169,9 @@ __global__ void gpuMaxA(float *A,float *MaxTemp)
 		__syncthreads();
 		tid+=gridDim.x*blockDim.x;
 	}
+#endif
 	if(tx==0){
-		MaxTemp[bx]=max_Block;
+		MaxTemp[bx]=SData[0];
 	}
 }
 
@@ -175,13 +179,13 @@ __global__ void gpuMinA(float *A,float *MinTemp)
 {
 	__shared__ float SData[MAXMIN_DIM];
 	__shared__ float min_Block;
-	int  bx=blockIdx.x;  
+	int  bx=blockIdx.x+ blockIdx.y*gridDim.x;  
 	int  tx=threadIdx.x;
 	
 
 	int tid=bx*blockDim.x+tx;
-	int Times=(N*N+gridDim.x*blockDim.x-1)/(gridDim.x*blockDim.x);
-	for(int i=0;i<Times;i++){
+	//int Times=(N*N+gridDim.x*blockDim.x-1)/(gridDim.x*blockDim.x);
+	//for(int i=0;i<Times;i++){
 		if(tid<N*N){
 			SData[tx]=A[tid];
 		}
@@ -192,11 +196,12 @@ __global__ void gpuMinA(float *A,float *MinTemp)
 		for(unsigned int s=blockDim.x/2;s>0;s>>=1){
 			if(tx<s){
 				if(SData[tx]>SData[tx+s]){
-					SData[tx+s]=SData[tx];
+					SData[tx]=SData[tx+s];
 				}
 			}
 			__syncthreads();
 		}
+#if 0
 		if(tx==0){
 			if(i==0){
 				min_Block=SData[0];
@@ -210,8 +215,9 @@ __global__ void gpuMinA(float *A,float *MinTemp)
 		__syncthreads();
 		tid+=gridDim.x*blockDim.x;
 	}
+#endif
 	if(tx==0){
-		MinTemp[bx]=min_Block;
+		MinTemp[bx]=SData[0];
 	}
 }
 
@@ -240,8 +246,8 @@ void main()
 	cudaMallocManaged(&SumR,blockNum*sizeof(float));
 	cudaMallocManaged(&A_max,sizeof(float));
 	cudaMallocManaged(&A_min,sizeof(float));
-	cudaMallocManaged(&MaxTemp,MAXMIN_B_DIM*sizeof(float));
-	cudaMallocManaged(&MinTemp,MAXMIN_B_DIM*sizeof(float));
+	cudaMallocManaged(&MaxTemp,NEED_BLOCK*sizeof(float));
+	cudaMallocManaged(&MinTemp,NEED_BLOCK*sizeof(float));
 	cudaMallocManaged(&A_array,N*N*sizeof(float));
 	cudaMallocManaged(&A_array_ref,N*N*sizeof(float));
 
@@ -280,9 +286,10 @@ void main()
 
 	gpuCountA<<<mygrid,myblock>>>(data_R,Amp_R,A_array);
 
-
-	gpuMaxA<<<MAXMIN_B_DIM,MAXMIN_DIM>>>(A_array,MaxTemp);
-	gpuMinA<<<MAXMIN_B_DIM,MAXMIN_DIM>>>(A_array,MinTemp);
+	mygrid.x = NEED_BLOCK/MAXMIN_B_DIM;
+	mygrid.y = MAXMIN_B_DIM;
+	gpuMaxA<<<mygrid,MAXMIN_DIM>>>(A_array,MaxTemp);
+	gpuMinA<<<mygrid,MAXMIN_DIM>>>(A_array,MinTemp);
 
 	cudaDeviceSynchronize();
 
@@ -292,7 +299,7 @@ void main()
 		printf( "failed \n" );
 
 	temp=MaxTemp[0];
-	for(int i=1;i<MAXMIN_B_DIM;i++){
+	for(int i=1;i<NEED_BLOCK;i++){
 		if(temp<MaxTemp[i]){
 			temp=MaxTemp[i];
 		}
@@ -300,7 +307,7 @@ void main()
 	*A_max=temp;
 
 	temp=MinTemp[0];
-	for(int i=1;i<MAXMIN_B_DIM;i++){
+	for(int i=1;i<NEED_BLOCK;i++){
 		if(temp>MinTemp[i]){
 			temp=MinTemp[i];
 		}
