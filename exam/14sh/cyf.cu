@@ -8,6 +8,7 @@
 #include <cuda_runtime.h>
 
 #include <memory.h> 
+#include "helper_timer.h"
 //
 #define N 8192      //总计算规模
 #define S_DIM 512    //计算模的分块
@@ -221,6 +222,9 @@ __global__ void gpuMinA(float *A,float *MinTemp)
 
 void main()
 {
+	StopWatchInterface *wt;
+	sdkCreateTimer(&wt);
+
 	int *data_R;
 	float *SumR,SumR2,temp;
 	float *Amp_R,*A_array,*A_min,*A_max,*MaxTemp,*MinTemp,*A_array_ref;//,*data_b,*data_c1,*data_c2;
@@ -241,6 +245,9 @@ void main()
 	cudaMallocManaged(&A_array,N*N*sizeof(float));
 	cudaMallocManaged(&A_array_ref,N*N*sizeof(float));
 
+	sdkResetTimer(&wt);
+	sdkStartTimer(&wt);
+
 	for(int i=0;i<N;i++){
 		data_R[i]=rand();
 	}
@@ -254,6 +261,11 @@ void main()
 
 	printf("CPU 计算结果：\n|R| %f，最大值 %f，最小值 %f\n",*Amp_R,*A_max,*A_min);
 
+	sdkStopTimer(&wt);
+	printf("cpu : %3.1f ms\n", sdkGetTimerValue(&wt));
+	
+	sdkResetTimer(&wt);
+	sdkStartTimer(&wt);
 
 	gpuAmpR<<<blockNum,S_DIM>>>(data_R,SumR);
 	cudaDeviceSynchronize();
@@ -295,10 +307,16 @@ void main()
 	}
 	*A_min=temp;
 
-	*A_max=cpuMaxA(A_array);
-	*A_min=cpuMinA(A_array);
+	//*A_max=cpuMaxA(A_array);
+	//*A_min=cpuMinA(A_array);
 
 	printf("GPU 计算结果：\n|R| %f，最大值 %f，最小值 %f\n",*Amp_R,*A_max,*A_min);
+
+	cudaDeviceSynchronize();
+	sdkStopTimer(&wt);
+	printf("gpu : %3.1f ms\n", sdkGetTimerValue(&wt));
+	
+
 	verifySeccuss=verify(A_array,A_array_ref,N*N);
 
 	if(verifySeccuss)
