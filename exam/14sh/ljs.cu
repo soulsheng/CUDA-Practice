@@ -13,7 +13,8 @@
 void cpu_calculate(int	*vetor,
 				   int   vector_len,
 				   float *min,
-				   float *max)
+				   float *max,
+				   float *mat)
 {
 	int   i, j;
 	long long result;
@@ -45,6 +46,8 @@ void cpu_calculate(int	*vetor,
 			{
 				min_tmp = tmp;
 			}
+
+			mat[i*vector_len+j] = tmp;
 		}
 	}
 
@@ -144,7 +147,8 @@ __global__ void square_sum_kernel( int   *vetor,
 void gpu_calculate(int	*vetor,
 				   int   vector_len,
 				   float *min,
-				   float *max)
+				   float *max,
+				   float *mat)
 {
 	int i, res;
 	dim3  grid_dim, block_dim;
@@ -249,6 +253,8 @@ void gpu_calculate(int	*vetor,
 
 	calculate_mul<<<grid_dim, block_dim>>>(vector_dev, vector_len, zhi, mat_mul_res);
 
+	cudaMemcpy( mat, mat_mul_res, sizeof(int) * vector_len * vector_len, cudaMemcpyDeviceToHost );
+
 	block_dim.x = BLOCK_DIM;
 	block_dim.y = 1;
 
@@ -307,6 +313,20 @@ INIT_FAILED:
 	}
 }
 
+bool verify(float *ab,float *abGpu,int n)
+{
+	int err = 0;
+	for(int i=0;i<n;i++){
+		if(ab[i]!=0 && fabs(ab[i]-abGpu[i])/fabs(ab[i])>1e-5){
+			err++;//return false;
+		}
+	}
+	if(err)
+		return false;
+	else
+		return true;
+}
+
 int main()
 {
 	int i;
@@ -325,11 +345,29 @@ int main()
 		vector[i] = rand() % 10;
 	}
 
-	cpu_calculate(vector, VECTOR_LEN, &cpu_min, &cpu_max);
-	gpu_calculate(vector, VECTOR_LEN, &gpu_min, &gpu_max);
+	int n = VECTOR_LEN;
+	float *mat = (float*)malloc(n*n*sizeof(float));
+	float *mat_ref = (float*)malloc(n*n*sizeof(float));
+
+	cpu_calculate(vector, VECTOR_LEN, &cpu_min, &cpu_max, mat_ref);
+	gpu_calculate(vector, VECTOR_LEN, &gpu_min, &gpu_max, mat);
 
 	printf("cpu max: %f, min:%f\n", cpu_max, cpu_min);
 	printf("gpu max: %f, min:%f\n", gpu_max, gpu_min);
+	
+	cudaError err = cudaGetLastError();
+	if( err!= cudaSuccess )
+		printf( "failed \n" );
+
+	bool verifySeccuss=verify( mat, mat_ref, n*n );
+
+	if(verifySeccuss)
+		printf("Verify Seccuss.\n");
+	else
+		printf("Verify Error!\n");
+
+	free( mat );
+	free( mat_ref );
 
 INIT_FAILED:
 	if(vector != NULL)
