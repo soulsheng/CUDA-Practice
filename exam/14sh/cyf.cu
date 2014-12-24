@@ -223,10 +223,15 @@ void main()
 {
 	int *data_R;
 	float *SumR,SumR2,temp;
-	float *Amp_R,*A_array,*A_min,*A_max,*MaxTemp,*MinTemp;//,*data_b,*data_c1,*data_c2;
+	float *Amp_R,*A_array,*A_min,*A_max,*MaxTemp,*MinTemp,*A_array_ref;//,*data_b,*data_c1,*data_c2;
 	bool verifySeccuss=0;
 	int blockNum=(N+S_DIM-1)/S_DIM;
 	cudaMallocManaged(&data_R,N*sizeof(int));
+	
+	cudaError err = cudaGetLastError();
+	if( err!= cudaSuccess )
+		printf( "failed \n" );
+
 	cudaMallocManaged(&Amp_R,sizeof(float));
 	cudaMallocManaged(&SumR,blockNum*sizeof(float));
 	cudaMallocManaged(&A_max,sizeof(float));
@@ -234,15 +239,16 @@ void main()
 	cudaMallocManaged(&MaxTemp,MAXMIN_B_DIM*sizeof(float));
 	cudaMallocManaged(&MinTemp,MAXMIN_B_DIM*sizeof(float));
 	cudaMallocManaged(&A_array,N*N*sizeof(float));
+	cudaMallocManaged(&A_array_ref,N*N*sizeof(float));
 
 	for(int i=0;i<N;i++){
 		data_R[i]=rand();
 	}
 
 	*Amp_R=cpuAmpR(data_R);
-	cpuCountA(data_R,*Amp_R,A_array);
-	*A_max=cpuMaxA(A_array);
-	*A_min=cpuMinA(A_array);
+	cpuCountA(data_R,*Amp_R,A_array_ref);
+	*A_max=cpuMaxA(A_array_ref);
+	*A_min=cpuMinA(A_array_ref);
 
 
 
@@ -267,6 +273,12 @@ void main()
 	gpuMinA<<<MAXMIN_B_DIM,MAXMIN_DIM>>>(A_array,MinTemp);
 
 	cudaDeviceSynchronize();
+
+	
+	err = cudaGetLastError();
+	if( err!= cudaSuccess )
+		printf( "failed \n" );
+
 	temp=MaxTemp[0];
 	for(int i=1;i<MAXMIN_B_DIM;i++){
 		if(temp<MaxTemp[i]){
@@ -287,12 +299,12 @@ void main()
 	*A_min=cpuMinA(A_array);
 
 	printf("GPU 计算结果：\n|R| %f，最大值 %f，最小值 %f\n",*Amp_R,*A_max,*A_min);
-	//verifySeccuss=verify(data_c1,data_c2,1);
+	verifySeccuss=verify(A_array,A_array_ref,N*N);
 
-	//if(verifySeccuss)
-	//	printf("Verify Seccuss.\n");
-	//else
-	//	printf("Verify Error!\n");
+	if(verifySeccuss)
+		printf("Verify Seccuss.\n");
+	else
+		printf("Verify Error!\n");
 	cudaFree(data_R);
 	cudaFree(Amp_R);
 	cudaFree(SumR);
