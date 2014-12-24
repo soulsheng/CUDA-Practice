@@ -3,6 +3,7 @@
 #include "math.h"
 #include "time.h"
 #include "helper_timer.h"
+#include <iostream>
 
 //生成随机32bit整数，填充p，长度n
 __host__ void cpu_gen_rand(int *p, int n)
@@ -50,16 +51,14 @@ __host__ void cpu_matrix(float *p, const float *q, int n)
 
 __global__ void kernel_matrix(float *p, const float *q, int n)
 {
-	int y = blockIdx.y*TILE_DIM+threadIdx.y;
-	int x = blockIdx.x*TILE_DIM+threadIdx.x;
+	int y = blockIdx.y;
+	int x = blockIdx.x*BLOCK_DIM+threadIdx.x;
 	p[(y)*n+(x)] = q[y]*q[x];
 }
 
 __host__ void gpu_matrix(float *p, const float *q, int n)
 {
-	int blockDim = 1024;
-	int gridDim = n/blockDim;
-	kernel_matrix<<<gridDim, blockDim>>>(p, q, n);
+	kernel_matrix<<<dim3(n/BLOCK_DIM, n), BLOCK_DIM>>>(p, q, n);
 }
 
 //求模||R||，p是向量R，长度n
@@ -77,7 +76,7 @@ __global__ void kernel_abs(float *pc, const float *p)
 
 	__shared__ float vec[BLOCK_DIM];
 
-	vec[threadIdx.x] = p[threadIdx.x];
+	vec[threadIdx.x] = p[index];
 
 	vec[threadIdx.x] *= vec[threadIdx.x];
 
@@ -119,7 +118,7 @@ __host__ float gpu_abs(float *p, int n)
 	cudaFree(dev_c);
 	cudaFreeHost(hst_c);
 
-	return sum;
+	return sqrt(sum);
 }
 
 //求a矩阵，p是矩阵R*RT，宽度w，高度h，r是模||R||，原位运算
@@ -130,17 +129,16 @@ __host__ void cpu_a(float *p, int w, int h, float r)
 		p[i] /= r;
 }
 
-__global__ void kernel_a(float *p, float r)
+__global__ void kernel_a(float *p, float r, int n)
 {
-	int index = blockIdx.x*blockDim.x + threadIdx.x;
-	p[index] /= r;
+	int index = blockIdx.x*blockDim.x+threadIdx.x;
+	p[blockIdx.y*n+index] /= r;
 }
 
 __host__ void gpu_a(float *p, int w, int h, float r)
 {
-	int blockDim = 1024;
-	int gridDim = w*h/blockDim;
-	kernel_a<<<gridDim, blockDim>>>(p, r);
+	int n = w;
+	kernel_a<<<dim3(n/BLOCK_DIM, n), BLOCK_DIM>>>(p, r, n);
 }
 
 //求最大ma、最小值mi，p是矩阵a，输出ma和mi
@@ -326,6 +324,7 @@ __host__ void gpu_run(float *pm, float *pma, float*pmi, const int *pi, int n)
 	//转浮点型运算
 	sdkStartTimer(&wt);
 	gpu_int2float(dev_f, dev_i, n);
+	cudaDeviceSynchronize();
 	sdkStopTimer(&wt);
 	printf("gpu_int2float : %3.1f ms\n", sdkGetTimerValue(&wt));
 	sdkResetTimer(&wt);
@@ -333,13 +332,18 @@ __host__ void gpu_run(float *pm, float *pma, float*pmi, const int *pi, int n)
 	//矩阵乘R*RT
 	sdkStartTimer(&wt);
 	gpu_matrix(dev_m, dev_f, n);
+	cudaDeviceSynchronize();
 	sdkStopTimer(&wt);
 	printf("gpu_matrix : %3.1f ms\n", sdkGetTimerValue(&wt));
 	sdkResetTimer(&wt);
+	cudaError err = cudaGetLastError();
+	if( err!= cudaSuccess )
+		std::cout << "failed " << std::endl;
 
 	//求模||R||
 	sdkStartTimer(&wt);
 	float r = gpu_abs(dev_f, n);
+	cudaDeviceSynchronize();
 	sdkStopTimer(&wt);
 	printf("gpu_abs : %3.1f ms\n", sdkGetTimerValue(&wt));
 	sdkResetTimer(&wt);
@@ -347,13 +351,18 @@ __host__ void gpu_run(float *pm, float *pma, float*pmi, const int *pi, int n)
 	//请矩阵A，结果输出在pm中，长度n*n
 	sdkStartTimer(&wt);
 	gpu_a(dev_m, n, n, r);
+	cudaDeviceSynchronize();
 	sdkStopTimer(&wt);
 	printf("gpu_a : %3.1f ms\n", sdkGetTimerValue(&wt));
 	sdkResetTimer(&wt);
+	err = cudaGetLastError();
+	if( err!= cudaSuccess )
+		std::cout << "failed " << std::endl;
 
 	//计算最大ma最小值mi
 	sdkStartTimer(&wt);
 	gpu_mami(pma, pmi, dev_m, n, n);
+	cudaDeviceSynchronize();
 	sdkStopTimer(&wt);
 	printf("gpu_mami : %3.1f ms\n", sdkGetTimerValue(&wt));
 	sdkResetTimer(&wt);
@@ -374,11 +383,26 @@ __host__ void gpu_run(float *pm, float *pma, float*pmi, const int *pi, int n)
 	cudaDeviceReset();
 }
 
+bool verify(float *ab,float *abGpu,int n)
+{
+	int err = 0;
+	for(int i=0;i<n;i++){
+		if(ab[i]!=0 && fabs(ab[i]-abGpu[i])/fabs(ab[i])>1e-5){
+			err++;//return false;
+		}
+	}
+	if(err)
+		return false;
+	else
+		return true;
+}
+
 int main()
 {
 	int n = 8192;
 	int *pi = (int*)malloc(n*sizeof(int));
 	float *pm = (float*)malloc(n*n*sizeof(float));
+	float *pm_g = (float*)malloc(n*n*sizeof(float));
 	float ma, mi;
 	StopWatchInterface *wt;
 	sdkCreateTimer(&wt);
@@ -394,10 +418,18 @@ int main()
 	cpu_run(pm, &ma, &mi, pi, n);
 
 	//gpu运行，pm为输出矩阵，ma最大值，mi最小值，pi是随机整数向量，n长度
-	gpu_run(pm, &ma, &mi, pi, n);
+	gpu_run(pm_g, &ma, &mi, pi, n);
 	
+	bool verifySeccuss=verify(pm,pm_g,n*n);
+
+	if(verifySeccuss)
+		printf("Verify Seccuss.\n");
+	else
+		printf("Verify Error!\n");
+
 	free(pi);
 	free(pm);
+	free(pm_g);
 
 	system("pause");
 

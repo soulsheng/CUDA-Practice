@@ -100,3 +100,5 @@
 /exam/14sh/*.opensdf
 /exam/14sh/*.sdf
 /exam/14sh/*.pdb
+/exam/14sh/ipch
+/exam/14sh/*.suo
